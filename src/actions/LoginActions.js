@@ -1,0 +1,88 @@
+import {
+  ACCOUNT_LOGIN_FAILED,
+  ACCOUNT_LOGIN_REQUESTED,
+  ACCOUNT_LOGIN_SUCCESS,
+  // ACCOUNT_LOGOUT_FAILED,
+  ACCOUNT_LOGOUT_REQUESTED,
+  ACCOUNT_LOGOUT_SUCCESS,
+} from '../actionTypes';
+import {
+  getIsModifyingLogin,
+} from '../reducers/AccountReducer';
+import { login } from '../utils/MarmosetAPI';
+
+const userLoginRequested = {
+  type: ACCOUNT_LOGIN_REQUESTED,
+};
+
+const userLoginFailed = {
+  type: ACCOUNT_LOGIN_FAILED,
+};
+
+const userLoginSuccess = (payload) => {
+  return {
+    payload,
+    type: ACCOUNT_LOGIN_SUCCESS,
+  };
+};
+
+export const userLogin = ({ username, password }) => {
+  return (dispatch, getState) => {
+    if (getIsModifyingLogin(getState())) {
+      return;
+    }
+
+    dispatch(userLoginRequested);
+    login(username, password).then((error, response) => {
+      if (error) {
+        return dispatch(userLoginFailed);
+      }
+
+      return dispatch(userLoginSuccess({ data: response }));
+    });
+  };
+};
+
+const userLogoutRequested = {
+  type: ACCOUNT_LOGOUT_REQUESTED,
+};
+
+// TODO: finish logout sequence
+// const userLogoutFailed = (payload) => {
+//   return {
+//     payload,
+//     type: ACCOUNT_LOGOUT_FAILED,
+//   };
+// };
+
+const userLogoutSuccess = {
+  type: ACCOUNT_LOGOUT_SUCCESS,
+};
+
+export const userLogout = () => {
+  return (dispatch, getState) => {
+    if (getIsModifyingLogin(getState())) {
+      return;
+    }
+
+    dispatch(userLogoutRequested);
+    dispatch(userLogoutSuccess);
+    // Meteor.logout((error) => {
+    //   if (error) {
+    //     return dispatch(userLogoutFailed({ error }));
+    //   }
+
+    //   return dispatch(userLogoutSuccess);
+    // });
+  };
+};
+
+export const initializeUser = () => {
+  return (dispatch) => {
+    // return MeteorCall('getAccount', {}, (err, user) => {
+    //   if (user) {
+    //     dispatch(userLoginSuccess({ data: user }));
+    //   }
+    // });
+  };
+};

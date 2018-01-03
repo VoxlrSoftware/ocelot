@@ -1,0 +1,46 @@
+@import '../../../styles/site.scss';
+
+.vx-PagesCallStrategyEdit {
+  .label-group {
+    margin-bottom: 1em;
+  }
+}
+
+.vx-PagesCallStrategyEdit-actionBar {
+  text-align: right;
+  margin-top: 1em;
+}
+
+.vx-PagesCallStrategyEdit-list {
+  padding: 1rem;
+  border: 1px solid $gray-border;
+
+  .ui.segment {
+    margin: 0.5rem 0rem;
+    padding: 0.75rem 0.75rem;
+
+    &:first-child {
+      margin-top: 0rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0rem;
+    }
+    
+    .editor {
+      margin-right: 1rem;
+    }
+
+    i {
+      float: right;
+      cursor: pointer;
+      color: $dark-red;
+      margin-right: -0.25rem;
+      margin-top: -0.25rem;
+
+      &:hover {
+        color: $black;
+      }
+    }
+  }
+}

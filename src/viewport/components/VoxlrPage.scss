@@ -1,0 +1,39 @@
+a:not(.link):hover {
+  text-decoration: underline !important;
+}
+
+.form-grid {
+  margin: 0 !important;
+
+  & .label {
+    line-height: 2.5em;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  & .column {
+    padding: 0rem 0.5rem !important;
+  }
+
+  & .row {
+    padding: 0.5rem 0rem !important;
+  }
+}
+
+.label-group {
+  & > span:first-child {
+    font-weight: bold;
+    margin-right: 1em;
+  }
+}
+
+.blurring.dimmed.dimmable {
+  .no-dim {
+    filter: none;
+    -webkit-filter: none;
+  }
+}
+
+.body-rendered {
+  z-index: -1;
+}

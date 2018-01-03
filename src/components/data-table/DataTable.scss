@@ -1,0 +1,45 @@
+@import '../../styles/site.scss';
+
+.vx-DataTable-noResultsRow {
+  text-align: center;
+  font-size: 1.2em;
+  height: 100px;
+}
+
+.vx-DataTable-showingLabel {
+  margin-right: 10px;
+}
+
+.vx-DataTable-displayCount {
+  line-height: 3em;
+  text-align: center;
+
+  & > span {
+    margin-left: 10px;
+  }
+}
+
+.vx-DataTable {
+  th {
+    @include no-select;
+    &.sortable {
+      cursor: pointer !important;
+      i {
+        font-size: inherit;
+        line-height: inherit;
+        margin-left: 20px;
+      }
+    }
+  }
+
+  tbody > tr {
+    &.clickable:hover {
+      cursor: pointer;
+      background-color: $row-hover;
+    }
+  }
+
+  td.clickable:hover {
+    @include clickable;
+  }
+}

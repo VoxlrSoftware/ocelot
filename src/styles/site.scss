@@ -1,0 +1,40 @@
+$size-header: 2rem;
+
+$row-hover: #d8d8d8;
+
+$gray-border: #d0d0d0;
+$gray-background: #efeff0;
+
+$dark-red: #d00000;
+
+$black: #000000;
+
+$select-color: #39b6ff;
+
+@mixin clickable {
+  color: #96c8da;
+  cursor: pointer;
+}
+
+@mixin no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+};
+
+@mixin centerer {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+}
+
+@mixin triangleUp($size, $color) {
+  width: 0;
+  height: 0;
+  border-left: #{$size} solid transparent;
+  border-right: #{$size} solid transparent;
+  border-bottom: #{$size} solid $color;
+}

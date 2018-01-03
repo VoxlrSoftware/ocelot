@@ -1,0 +1,21 @@
+@import '../../styles/site.scss';
+
+.vx-Summary-statistic {
+  cursor: pointer;
+  position: relative;
+
+  &.active, &.statOnly {
+    cursor: default;
+  }
+
+  & > .loader {
+    text-align: center;
+    width: 100%;
+  }
+
+  & > .indicator {
+    @include triangleUp(15px, #dfdfdf);
+    @include centerer
+    bottom: -36px;
+  }
+}

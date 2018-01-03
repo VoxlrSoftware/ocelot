@@ -1,0 +1,21 @@
+.vx-PagesCallCallStrategyAnalysis-talk {
+  & .progress {
+    margin-bottom: 0px !important;
+  }
+}
+
+.vx-PagesCallCallStrategyAnalysis-phrases {
+  margin-top: 1rem !important;
+
+  & > .segment {
+    &.detected {
+      background-color: #21ba45;
+      font-weight: bold;
+      color: white;
+    }
+    
+    & i {
+      float: right !important;
+    }
+  }
+}

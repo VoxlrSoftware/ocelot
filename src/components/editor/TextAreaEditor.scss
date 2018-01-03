@@ -1,0 +1,24 @@
+@import '../../styles/site.scss';
+
+.vx-TextAreaEditor {
+
+  .content {
+    padding: .5rem;
+    border: 1px solid transparent;
+
+    &:hover {
+      border-radius: 3px;
+      border: 1px solid $select-color;
+    }
+  }
+
+  textarea {
+    width: 100%;
+    border-radius: 3px;
+    border-color: $select-color;
+    padding: .5rem;
+    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+    line-height: inherit;
+    margin-bottom: -4px;
+  }
+}

@@ -1,0 +1,63 @@
+.vx-Alert {
+  .close.icon {
+    z-index: 1;
+  }
+
+  .grid {
+    margin-top: 0.1em;
+  }
+
+  .row {
+    padding: 0px !important;
+  }
+
+  .hidden-message-col {
+    padding: 1em 2em 0.5em 2em !important;
+
+    .segment {
+      max-height: 10rem;
+      overflow-y: auto;
+    }
+  }
+  
+  .message {
+    padding: 0.5em 0.5em;
+  }
+
+  .message-col {
+    padding-left: 0em !important;
+    font-size: 0.9em;
+
+    .showMore {
+      padding-left: 1em;
+      cursor: pointer;
+    }
+  }
+
+  .icon-col {
+    padding-right: 0em  !important;
+    text-align: center;
+
+    i {
+      font-size: 1.25em;
+    }
+  }
+
+  .notification-appear {
+    opacity: 0.01;
+  }
+  
+  .notification-appear.notification-appear-active {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+  }
+  
+  .notification-leave {
+    opacity: 1;
+  }
+  
+  .notification-leave.notification-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
+  }
+}
