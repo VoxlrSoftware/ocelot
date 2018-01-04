@@ -4,9 +4,12 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.js',
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"development"',
+    }),
   ],
   output: {
     filename: '[name].bundle.js',
@@ -17,6 +20,7 @@ module.exports = {
   devServer: {
     port: 3000,
     contentBase: path.join(__dirname, 'dist'),
+    historyApiFallback: true,
     hot: true
   },
   node: {
@@ -33,7 +37,20 @@ module.exports = {
       {
         test: /\.js|.jsx?$/,
         exclude: /(node_modules)/,
-        loaders: ['babel-loader']
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              'react',
+              'stage-2',
+              'babel-preset-env'
+            ],
+            plugins: [
+              'babel-plugin-transform-class-properties',
+              'babel-plugin-transform-strict-mode'
+            ]
+          }
+        }
       },
       {
         test: /\.css$/,

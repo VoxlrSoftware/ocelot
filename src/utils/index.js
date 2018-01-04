@@ -26,7 +26,7 @@ export const deepExtend = (target, ...sources) => {
 
   /* eslint-disable */
   sources.forEach((obj) => {
-    const keys = isObjectOrMap(obj) ? obj.keySeq() : [];
+    const keys = isObjectOrMap(obj) ? Object.keys(obj) : [];
     keys.forEach((prop) => {
       const val = obj.get(prop);
       if (val && isObjectOrMap(val) && !isArrayOrList(val)) {
