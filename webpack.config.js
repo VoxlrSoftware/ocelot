@@ -12,19 +12,17 @@ module.exports = {
     filename: '[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     sourceMapFilename: '[name].map',
-    publicPath: '/static/'
+    // publicPath: '/static/'
   },
   devServer: {
     port: 3000,
     contentBase: path.join(__dirname, 'dist'),
-    historyApiFallback: {
-      index: 'index.html'
-    },
     hot: true
   },
   node: {
     fs: 'empty',
     net: 'empty',
+    tls: 'empty'
   },
   module: {
     rules: [

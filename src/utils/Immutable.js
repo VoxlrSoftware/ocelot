@@ -1,11 +1,13 @@
-import { isIndexed } from 'immutable';
+import { Iterable } from 'immutable';
 
 const validateDirectEquality = (a, b) => a === b;
 const validateNonExists = (a, b) => !a || !b;
 const getKeys = a => Object.keys(a);
 
 const shallowListEquals = (a, b) => {
-  const size = a.size;
+  const {
+    size,
+  } = a;
   if (!validateDirectEquality(b.size, a)) {
     return false;
   }
@@ -24,8 +26,8 @@ const shallowMapEquals = (a, b) => {
     return true;
   }
 
-  if (isIndexed(a)) {
-    return isIndexed(b) ? shallowListEquals(a, b) : false;
+  if (Iterable.isIndexed(a)) {
+    return Iterable.isIndexed(b) ? shallowListEquals(a, b) : false;
   }
 
   return false;

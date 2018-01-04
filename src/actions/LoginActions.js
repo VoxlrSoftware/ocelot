@@ -76,13 +76,11 @@ export const userLogout = () => {
     // });
   };
 };
-
+// TODO: Fix initialization
 export const initializeUser = () => {
   return (dispatch) => {
-    // return MeteorCall('getAccount', {}, (err, user) => {
-    //   if (user) {
-    //     dispatch(userLoginSuccess({ data: user }));
-    //   }
-    // });
+    return new Promise((resolve) => {
+      resolve();
+    });
   };
 };
