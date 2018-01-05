@@ -5,6 +5,7 @@ import {
   createThunkReducers,
   getThunkInitialState,
 } from '../utils/redux/reducers';
+import localStorage from '../utils/localStorage';
 import {
   ACCOUNT_FETCH_FAILED,
   ACCOUNT_FETCH_REQUESTED,
@@ -22,6 +23,7 @@ export const stateKey = 'account';
 
 const initialState = Immutable.fromJS({
   account: getThunkInitialState(),
+  auth: JSON.parse(localStorage.getItem('_cred_')),
   isLoggedIn: false,
   isModifyingLogin: false,
   loginError: false,
@@ -40,12 +42,20 @@ const accountFetchFailed = (state) => {
 };
 
 const accountLoginSuccess = (state, { payload }) => {
+  const {
+    data: {
+      account,
+      auth,
+    },
+  } = payload;
+
   const newState = state.merge({
+    auth,
     isLoggedIn: true,
     isModifyingLogin: false,
   });
 
-  return accountSuccess(newState, { payload });
+  return accountSuccess(newState, { payload: { data: { account } } });
 };
 
 const accountLoginFailed = (state) => {
@@ -100,6 +110,7 @@ export const getIsLoggedIn = createStateSelector(accountReducerSelector, 'isLogg
 export const getIsModifyingLogin = createStateSelector(accountReducerSelector, 'isModifyingLogin');
 export const getLoginError = createStateSelector(accountReducerSelector, 'loginError');
 export const getLogoutError = createStateSelector(accountReducerSelector, 'logoutError');
+export const getAuth = createStateSelector(accountReducerSelector, 'auth');
 
 export const getAccountThunk = createStateSelector(accountReducerSelector, 'account');
 export const getAccount = createStateSelector(getAccountThunk, 'data');

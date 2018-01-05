@@ -7,9 +7,14 @@ import {
   ACCOUNT_LOGOUT_SUCCESS,
 } from '../actionTypes';
 import {
+  getAuth,
   getIsModifyingLogin,
 } from '../reducers/AccountReducer';
-import { login } from '../utils/MarmosetAPI';
+import {
+  createAccountRequest,
+  login,
+  makeRequest,
+} from '../utils/MarmosetAPI';
 
 const userLoginRequested = {
   type: ACCOUNT_LOGIN_REQUESTED,
@@ -33,7 +38,7 @@ export const userLogin = ({ username, password }) => {
     }
 
     dispatch(userLoginRequested);
-    login(username, password).then((error, response) => {
+    login(username, password).then(({ error, ...response }) => {
       if (error) {
         return dispatch(userLoginFailed);
       }
@@ -78,9 +83,24 @@ export const userLogout = () => {
 };
 // TODO: Fix initialization
 export const initializeUser = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const authState = getAuth(getState());
+
     return new Promise((resolve) => {
-      resolve();
+      if (!authState) {
+        return resolve();
+      }
+
+      const auth = authState.toJS();
+
+      makeRequest({ auth, ...createAccountRequest() })
+        .then(({ error, ...response }) => {
+          if (!error) {
+            return dispatch(userLoginSuccess({ data: { account: response, auth } }));
+          }
+
+          resolve();
+        });
     });
   };
 };
