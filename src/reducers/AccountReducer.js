@@ -55,7 +55,7 @@ const accountLoginSuccess = (state, { payload }) => {
     isModifyingLogin: false,
   });
 
-  return accountSuccess(newState, { payload: { data: { account } } });
+  return accountSuccess(newState, { payload: { data: account } });
 };
 
 const accountLoginFailed = (state) => {

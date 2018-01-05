@@ -23,6 +23,8 @@ import LoginPage from '../../pages/login/containers';
 
 import { Thunk } from '../../models/Thunk';
 
+import { isAdminAccount } from '../../utils/account';
+
 import './VoxlrPage.scss';
 
 const displayName = 'VoxlrPage';
@@ -59,7 +61,7 @@ export default class VoxlrPage extends Component {
       <PrivateRoute exact path="/call/:callId" component={ CallPage } key="call" />,
     ];
 
-    const isAdmin = accountState.data && accountState.data.getIn(['profile', 'role']) === 'admin';
+    const isAdmin = isAdminAccount(accountState.data);
 
     if (isAdmin) {
       routes.push(

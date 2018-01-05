@@ -96,7 +96,7 @@ export const initializeUser = () => {
       makeRequest({ auth, ...createAccountRequest() })
         .then(({ error, ...response }) => {
           if (!error) {
-            return dispatch(userLoginSuccess({ data: { account: response, auth } }));
+            dispatch(userLoginSuccess({ data: { account: response, auth } }));
           }
 
           resolve();

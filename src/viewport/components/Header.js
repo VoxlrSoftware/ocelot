@@ -11,6 +11,7 @@ import {
 
 import { getClassNameGenerator } from '../../utils/namespacing';
 import { wrapComponents } from '../../utils';
+import { isAdminAccount } from '../../utils/account';
 import RenderToBody from './RenderToBody';
 import Alert from '../../components/alert/Alert';
 
@@ -80,7 +81,7 @@ export default class Header extends Component {
         value: 0,
       };
 
-      const isAdmin = account && account.getIn(['profile', 'role']) === 'admin';
+      const isAdmin = isAdminAccount(account);
 
       return [
         <Menu.Item link onClick={ this.navTo('/call/new') }>New Call</Menu.Item>,
