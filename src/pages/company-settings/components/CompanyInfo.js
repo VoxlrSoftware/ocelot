@@ -70,7 +70,7 @@ export default class CompanyInfo extends Component {
       return <Loader active inline="centered" />;
     }
 
-    const companyName = companyState.data.get('Name');
+    const companyName = companyState.data.get('name');
     const classes = classnames(getClassName(), 'form-grid');
 
     const setPhoneNumberProps = {

@@ -11,7 +11,6 @@ import {
   getIsModifyingLogin,
 } from '../reducers/AccountReducer';
 import {
-  createAccountRequest,
   login,
   makeRequest,
 } from '../utils/MarmosetAPI';
@@ -38,13 +37,12 @@ export const userLogin = ({ username, password }) => {
     }
 
     dispatch(userLoginRequested);
-    login(username, password).then(({ error, ...response }) => {
-      if (error) {
+    login(username, password)
+      .then((response) => {
+        return dispatch(userLoginSuccess({ data: response }));
+      }, () => {
         return dispatch(userLoginFailed);
-      }
-
-      return dispatch(userLoginSuccess({ data: response }));
-    });
+      });
   };
 };
 
@@ -93,12 +91,11 @@ export const initializeUser = () => {
 
       const auth = authState.toJS();
 
-      makeRequest({ auth, ...createAccountRequest() })
-        .then(({ error, ...response }) => {
-          if (!error) {
-            dispatch(userLoginSuccess({ data: { account: response, auth } }));
-          }
-
+      makeRequest({ auth, path: 'account' })
+        .then((response) => {
+          dispatch(userLoginSuccess({ data: { account: response, auth } }));
+          resolve();
+        }, () => {
           resolve();
         });
     });

@@ -1,6 +1,7 @@
 import {
   createAction,
-  createMeteorCallAction,
+  createFetchAction,
+  createMutateAction,
   createMultipleActions,
 } from '../utils/redux/actions';
 import {
@@ -29,8 +30,7 @@ const [
 ]);
 
 export const fetchCompany = (companyId) => {
-  return createMeteorCallAction({
-    callPath: 'companies.findOne',
+  return createFetchAction({
     onFail: error => onCompanyFetchFailed({
       error,
     }),
@@ -42,9 +42,7 @@ export const fetchCompany = (companyId) => {
 
       return onCompanyFetchSuccess({ companyId, data });
     },
-    params: {
-      companyId,
-    },
+    path: `company/${companyId}`,
     shouldFetch: state => getCompanyStateSelector(state, companyId).shouldFetch(),
   });
 };
@@ -65,8 +63,7 @@ export const updateCompany = (config) => {
     newValues,
   } = config;
 
-  return createMeteorCallAction({
-    callPath: 'companies.updateOne',
+  return createMutateAction({
     onFail: error => onCompanyUpdateFailed({
       error,
     }),
@@ -80,10 +77,8 @@ export const updateCompany = (config) => {
 
       return onCompanyUpdateSuccess({ companyId, data });
     },
-    params: {
-      companyId,
-      newValues,
-    },
+    params: newValues,
+    path: `company/${companyId}`,
     shouldFetch: () => true,
   });
 };

@@ -1,5 +1,6 @@
 import request from 'request-promise';
 import Promise from 'bluebird';
+import { Map } from 'immutable';
 import _ from 'lodash';
 import localStorage from './localStorage';
 import { MARMOSET_URL } from '../Constants';
@@ -7,19 +8,20 @@ import { MARMOSET_URL } from '../Constants';
 const getPath = path => `${MARMOSET_URL}/${path}`;
 const getApiPath = path => getPath(`api/${path}`);
 
-export const createAccountRequest = () => {
-  return {
-    path: 'account',
-  };
+const getAccessToken = (auth) => {
+  return auth &&
+    (Map.isMap(auth) ? auth.get('access_token') :
+      auth.access_token);
 };
 
 export const makeRequest = (opts) => {
   let requestOpts = opts;
 
   if (opts.auth) {
+    const accessToken = getAccessToken(opts.auth);
     requestOpts = _.merge({
       headers: {
-        'Authorization': `Bearer ${opts.auth.access_token}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
     }, _.omit(requestOpts, ['auth']));
   }
@@ -36,15 +38,11 @@ export const makeRequest = (opts) => {
     }, requestOpts);
   }
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     request(requestOpts).then((body) => {
-      resolve({
-        ...body,
-      });
+      resolve(body);
     }).catch((error) => {
-      resolve({
-        error,
-      });
+      reject(error);
     });
   });
 };
@@ -64,23 +62,33 @@ export const login = (username, password) => {
     json: true,
     method: 'POST',
     url: getPath('oauth/token'),
-  }).then(({ error, ...response }) => {
-    if (error) {
-      return Promise.resolve({ error });
-    }
-
+  }).then((response) => {
     auth = response;
     localStorage.setItem('_cred_', JSON.stringify(auth));
 
-    return makeRequest({ auth, ...createAccountRequest() });
-  }).then(({ error, ...response }) => {
-    if (error) {
-      return Promise.resolve({ error });
-    }
-
+    return makeRequest({ auth, path: 'account' });
+  }).then((response) => {
     return Promise.resolve({
       account: response,
       auth,
     });
   });
+};
+
+export const doGet = (config) => {
+  const opts = {
+    method: 'GET',
+    ...config,
+  };
+
+  return makeRequest(opts);
+};
+
+export const doPut = (config) => {
+  const opts = {
+    method: 'PUT',
+    ...config,
+  };
+
+  return makeRequest(opts);
 };

@@ -1,3 +1,6 @@
+import { doGet, doPut } from '../MarmosetAPI';
+import { getAuth } from '../../reducers/AccountReducer';
+
 export const createMeteorCallAction = (config) => {
   return (dispatch, getState) => {
     const {
@@ -22,6 +25,58 @@ export const createMeteorCallAction = (config) => {
       // });
     }
   };
+};
+
+const execAction = (config) => {
+  return (dispatch, getState) => {
+    const {
+      action,
+      shouldFetch,
+      onRequest,
+      onSuccess,
+      onFail,
+      ...actionParams
+    } = config;
+
+    if (shouldFetch(getState())) {
+      dispatch(onRequest);
+
+      const auth = getAuth(getState());
+      action({
+        auth,
+        ...actionParams,
+      }).then((response) => {
+        dispatch(onSuccess(response, getState()));
+      }, (error) => {
+        dispatch(onFail(error, getState()));
+      });
+    }
+  };
+};
+
+export const createFetchAction = (config) => {
+  return execAction({
+    action: ({ auth, path }) => {
+      return doGet({
+        auth,
+        path,
+      });
+    },
+    ...config,
+  });
+};
+
+export const createMutateAction = (config) => {
+  return execAction({
+    action: ({ auth, params, path }) => {
+      return doPut({
+        auth,
+        body: params,
+        path,
+      });
+    },
+    ...config,
+  });
 };
 
 export const createAction =

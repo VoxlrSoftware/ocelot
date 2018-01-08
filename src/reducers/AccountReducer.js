@@ -115,4 +115,4 @@ export const getAuth = createStateSelector(accountReducerSelector, 'auth');
 export const getAccountThunk = createStateSelector(accountReducerSelector, 'account');
 export const getAccount = createStateSelector(getAccountThunk, 'data');
 export const getAccountCompanyName = createStateSelector(getAccount, 'profile', 'company');
-export const getAccountCompanyId = createStateSelector(getAccount, 'profile', 'companyId');
+export const getAccountCompanyId = createStateSelector(getAccount, 'companyId');
