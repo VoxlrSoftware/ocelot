@@ -174,11 +174,14 @@ export default class DataTable extends Component {
         { leftIcon }
         { paginationOptions.map((option) => {
           const disabled = option === page;
-          return (<Menu.Item
-            as="a"
-            key={ option }
-            disabled={ disabled }
-            onClick={ () => this._setPage(option) }>{ option }</Menu.Item>);
+          return (
+            <Menu.Item
+              as="a"
+              key={ option }
+              disabled={ disabled }
+              onClick={ () => this._setPage(option) }>{ option }
+            </Menu.Item>
+          );
         })}
         { rightIcon }
       </Menu>
@@ -219,7 +222,7 @@ export default class DataTable extends Component {
                 <Dropdown { ...dropdownProps } />
               </Grid.Column>
               <Grid.Column width={ 6 } className={ getClassName({ child: 'displayCount' }) }>
-                Page <b>{ page }</b> of <b>{ totalPages }</b>
+                Page <b>{ page + 1 }</b> of <b>{ totalPages }</b>
                 <span>({ totalCount } Results)</span>
               </Grid.Column>
               <Grid.Column>

@@ -1,4 +1,4 @@
-import { doGet, doPut } from '../MarmosetAPI';
+import { doGet, makeRequest } from '../MarmosetAPI';
 import { getAuth } from '../../reducers/AccountReducer';
 
 export const createMeteorCallAction = (config) => {
@@ -56,10 +56,17 @@ const execAction = (config) => {
 
 export const createFetchAction = (config) => {
   return execAction({
-    action: ({ auth, path }) => {
+    action: ({
+      auth,
+      path,
+      pagination,
+      params = {},
+    }) => {
       return doGet({
         auth,
+        pagination,
         path,
+        qs: params,
       });
     },
     ...config,
@@ -68,10 +75,16 @@ export const createFetchAction = (config) => {
 
 export const createMutateAction = (config) => {
   return execAction({
-    action: ({ auth, params, path }) => {
-      return doPut({
+    action: ({
+      auth,
+      method = 'PUT',
+      params,
+      path,
+    }) => {
+      return makeRequest({
         auth,
         body: params,
+        method,
         path,
       });
     },

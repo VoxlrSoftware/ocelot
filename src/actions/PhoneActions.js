@@ -1,5 +1,6 @@
 import {
   createMeteorCallAction,
+  createMutateAction,
   createAction,
   createMultipleActions,
 } from '../utils/redux/actions';
@@ -105,16 +106,20 @@ export const validatePhoneNumber = (config) => {
   const {
     extension,
     onNumberSet,
+    params = {},
     phoneNumber,
     type,
   } = config;
 
-  const callPath = type === 'account' ?
-    'account.validatePhoneNumber' :
-    'company.validatePhoneNumber';
+  let path;
 
-  return createMeteorCallAction({
-    callPath,
+  if (type === 'account') {
+    path = 'account';
+  } else {
+    path = `company/${params.companyId}`;
+  }
+
+  return createMutateAction({
     onFail: error => onPhoneValidateFailed({
       error,
     }),
@@ -133,8 +138,9 @@ export const validatePhoneNumber = (config) => {
     },
     params: {
       extension,
-      phoneNumber,
+      number: phoneNumber,
     },
+    path,
     shouldFetch: state => !getPhoneValidation(state).isFetching,
   });
 };

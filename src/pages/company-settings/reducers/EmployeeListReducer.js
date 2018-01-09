@@ -20,7 +20,7 @@ export const stateKey = 'employeeList';
 
 const initialState = getThunkPagingInitialState({
   pagination: {
-    sortBy: 'createdAt',
+    sortBy: 'createDate',
     sortOrder: SORT_ORDER_DESC,
   },
 });

@@ -26,10 +26,10 @@ export default class Summary extends Component {
   buildColumns = () => {
     return [
       {
-        name: 'employeeName',
+        name: 'fullName',
         render: (entry) => {
-          const name = entry.get('employeeName');
-          const id = entry.get('_id');
+          const name = entry.get('fullName');
+          const id = entry.get('id');
           return <Link to={ `/employee/${id}` }>{ name }</Link>;
         },
         text: 'Employee',
@@ -40,9 +40,9 @@ export default class Summary extends Component {
         text: 'Email',
       },
       {
-        name: 'createdAt',
+        name: 'createDate',
         render: (entry) => {
-          const createDate = entry.get('createdAt');
+          const createDate = entry.get('createDate');
           return moment(createDate).format('MM/DD/YYYY hh:mm');
         },
         text: 'Create Date',

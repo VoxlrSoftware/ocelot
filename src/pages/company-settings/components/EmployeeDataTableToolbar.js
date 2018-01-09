@@ -21,13 +21,20 @@ export default class Summary extends Component {
     super(props);
     this.state = {
       email: '',
-      name: '',
+      firstName: '',
+      lastName: '',
     };
   }
 
-  setName = (proxy, { value }) => {
+  setFirstName = (proxy, { value }) => {
     this.setState({
-      name: value,
+      firstName: value,
+    });
+  }
+
+  setLastName = (proxy, { value }) => {
+    this.setState({
+      lastName: value,
     });
   }
 
@@ -61,7 +68,10 @@ export default class Summary extends Component {
     } = this.props;
 
     const buttonProps = {
-      disabled: isCreating || !this.state.name.length || !this.state.email.length,
+      disabled: isCreating ||
+        !this.state.firstName.length ||
+        !this.state.lastName.length ||
+        !this.state.email.length,
       loading: isCreating,
       onClick: () => this.addEmployee(),
       primary: true,
@@ -70,7 +80,8 @@ export default class Summary extends Component {
     return (
       <Form className={ getClassName() }>
         <Form.Group widths="equal">
-          <Form.Input placeholder="Name" onChange={ this.setName } value={ this.state.name } />
+          <Form.Input placeholder="First Name" onChange={ this.setFirstName } value={ this.state.firstName } />
+          <Form.Input placeholder="Last Name" onChange={ this.setLastName } value={ this.state.lastName } />
           <Form.Input placeholder="Email" onChange={ this.setEmail } value={ this.state.email } />
           <Form.Button { ...buttonProps }>Add Employee</Form.Button>
         </Form.Group>

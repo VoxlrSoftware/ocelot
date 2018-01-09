@@ -4,7 +4,7 @@ import {
 } from '../Constants';
 
 export class Pagination extends Immutable.Record({
-  page: 1,
+  page: 0,
   pageSize: 10,
   sortBy: '',
   sortOrder: SORT_ORDER_ASC,
@@ -28,5 +28,18 @@ export class Pagination extends Immutable.Record({
 
   setSortOrder(sortOrder) {
     return this.set('sortOrder', sortOrder);
+  }
+
+  getQueryObject() {
+    const query = {
+      page: this.page,
+      size: this.pageSize,
+    };
+
+    if (this.sortBy !== '') {
+      query.sort = `${this.sortBy},${this.sortOrder}`;
+    }
+
+    return query;
   }
 }

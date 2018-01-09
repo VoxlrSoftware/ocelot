@@ -1,6 +1,7 @@
 /* eslint-disable */
 var path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -10,6 +11,10 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"development"',
     }),
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, 'static'),
+      to: path.resolve(__dirname, 'dist', 'static')
+    }]),
   ],
   output: {
     filename: '[name].bundle.js',

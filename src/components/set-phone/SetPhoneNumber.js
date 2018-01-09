@@ -31,9 +31,10 @@ export default class SetPhoneNumber extends Component {
     currentNumber: PropTypes.string,
     onClose: PropTypes.func.isRequired,
     onNumberSet: PropTypes.func.isRequired,
+    params: PropTypes.object,
     phoneValidation: PropTypes.instanceOf(Thunk).isRequired,
     phoneVerification: PropTypes.instanceOf(Thunk).isRequired,
-    show: PropTypes.bool.isRequired,
+    show: PropTypes.bool,
     validatePhoneNumber: PropTypes.func.isRequired,
     validateType: PropTypes.string.isRequired,
   };
@@ -149,6 +150,7 @@ export default class SetPhoneNumber extends Component {
     this.props.validatePhoneNumber({
       extension: this.state.extension,
       onNumberSet: this.props.onNumberSet,
+      params: this.props.params,
       phoneNumber: this.state.phoneNumber,
       type: this.props.validateType,
     });

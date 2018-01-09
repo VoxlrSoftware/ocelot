@@ -9,6 +9,7 @@ export class Thunk extends Immutable.Record({
   isStale: true,
   pagination: null,
   totalCount: undefined,
+  totalPages: undefined,
 }) {
   static fromJS(initialState) {
     const record = Object.assign({}, initialState);
@@ -21,6 +22,7 @@ export class Thunk extends Immutable.Record({
     const record = Object.assign({
       pagination,
       totalCount: 0,
+      totalPages: 0,
     }, initialState);
 
     return new Thunk(record);
@@ -56,5 +58,9 @@ export class Thunk extends Immutable.Record({
 
   setTotalCount(totalCount) {
     return this.set('totalCount', totalCount);
+  }
+
+  setTotalPages(totalPages) {
+    return this.set('totalPages', totalPages);
   }
 }

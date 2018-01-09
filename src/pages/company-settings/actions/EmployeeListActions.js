@@ -1,5 +1,4 @@
-import { createMeteorCallAction } from '../../../utils/redux/actions';
-import { getPaginationValues } from '../../../utils/pagination';
+import { createFetchAction } from '../../../utils/redux/actions';
 import {
   EMPLOYEE_LIST_FETCH_FAILED,
   EMPLOYEE_LIST_FETCH_REQUESTED,
@@ -35,27 +34,18 @@ export const fetchEmployeeList = (params) => {
     pagination,
   } = params;
 
-  const pageParams = getPaginationValues(pagination);
-
-  return createMeteorCallAction({
-    callPath: 'users.listByCompany',
+  return createFetchAction({
     onFail: error => onEmployeeListFetchFailed({ error }),
     onRequest: onEmployeeListFetchRequested,
-    onSuccess: (data) => {
-      if (!data.length) {
-        return onEmployeeListFetchSuccess({ data: [], total: 0 });
-      }
-
+    onSuccess: (response) => {
       const {
         results,
-        total,
-      } = data[0];
-      return onEmployeeListFetchSuccess({ data: results, total });
+        ...data
+      } = response;
+      return onEmployeeListFetchSuccess({ data: results, ...data });
     },
-    params: {
-      companyId,
-      ...pageParams,
-    },
+    pagination,
+    path: `company/${companyId}/user`,
     shouldFetch: state => getEmployeeListThunk(state).shouldFetch(),
   });
 };

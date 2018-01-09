@@ -54,9 +54,11 @@ export const createThunkReducers = (...thunkKey) => {
     (state, { payload }) =>
       state.setData(undefined).setIsFetching(false).setIsStale(false).setError(payload.error),
     state => state.setIsFetching(true).clearError(),
-    (state, { payload: { data, total } }) =>
-      state.setData(data).setTotalCount(total)
-        .setIsFetching(false).setIsStale(false)
+    (state, { payload: { data, totalCount, totalPages } }) =>
+      state.setData(data).setTotalCount(totalCount)
+        .setTotalPages(totalPages)
+        .setIsFetching(false)
+        .setIsStale(false)
         .clearError(),
     state => state.setIsStale(true).clearError(),
   ];

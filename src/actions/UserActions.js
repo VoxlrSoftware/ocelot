@@ -1,5 +1,6 @@
 import {
   createMeteorCallAction,
+  createMutateAction,
   createMultipleActions,
 } from '../utils/redux/actions';
 import {
@@ -59,12 +60,13 @@ export const fetchUser = (userId) => {
 export const createUser = (config) => {
   const {
     email,
-    name,
+    firstName,
+    lastName,
     onSuccess = () => {},
   } = config;
 
-  return createMeteorCallAction({
-    callPath: 'enrollUser',
+  return createMutateAction({
+    method: 'POST',
     onFail: error => onUserCreateFailed({
       error,
     }),
@@ -75,8 +77,10 @@ export const createUser = (config) => {
     },
     params: {
       email,
-      name,
+      firstName,
+      lastName,
     },
+    path: 'user',
     shouldFetch: state => getUserCreate(state).shouldFetch(),
   });
 };

@@ -76,19 +76,22 @@ export const login = (username, password) => {
 };
 
 export const doGet = (config) => {
+  const {
+    pagination,
+    ...getConfig
+  } = config;
+
+  if (pagination) {
+    const query = pagination.getQueryObject();
+    const qs = _.merge(query, config.qs || {});
+    getConfig.qs = qs;
+  }
+
   const opts = {
     method: 'GET',
-    ...config,
+    ...getConfig,
   };
 
   return makeRequest(opts);
 };
 
-export const doPut = (config) => {
-  const opts = {
-    method: 'PUT',
-    ...config,
-  };
-
-  return makeRequest(opts);
-};
