@@ -77,7 +77,7 @@ export default class CallStrategyList extends Component {
       selectedStrategy,
     } = this.props;
 
-    const callStrategies = company.get('callTemplates');
+    const callStrategies = company.get('callStrategies');
 
     const options = callStrategies.map((strategy, index) => {
       return {
@@ -100,7 +100,7 @@ export default class CallStrategyList extends Component {
       account,
     } = this.props;
 
-    const userPhone = getPhoneNumber(account.get('profile'));
+    const userPhone = getPhoneNumber(account);
     if (userPhone) {
       return userPhone;
     }
@@ -175,7 +175,7 @@ export default class CallStrategyList extends Component {
       showDialer,
     } = this.props;
 
-    const selectedStrategyObj = getStrategyByName(company.get('callTemplates'), selectedStrategy);
+    const selectedStrategyObj = getStrategyByName(company.get('callStrategies'), selectedStrategy);
 
     const dialerProps = {
       callStrategy: selectedStrategyObj,
@@ -209,7 +209,7 @@ export default class CallStrategyList extends Component {
       selectedStrategy,
     } = props;
 
-    const selectedStrategyObj = getStrategyByName(company.get('callTemplates'), selectedStrategy);
+    const selectedStrategyObj = getStrategyByName(company.get('callStrategies'), selectedStrategy);
 
     connectToVoice({
       accountId: account.get('_id'),

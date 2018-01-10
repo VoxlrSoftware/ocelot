@@ -18,11 +18,5 @@ export const formatPhoneNumber = (phoneNumber) => {
 };
 
 export const getPhoneNumber = (state) => {
-  let phoneNumber;
-  const phoneNumberState = state.get('phoneNumber');
-  if (!!phoneNumberState && phoneNumberState.get('verified')) {
-    phoneNumber = phoneNumberState.get('number');
-  }
-
-  return phoneNumber;
+  return state && state.get('phoneNumber');
 };

@@ -53,7 +53,7 @@ export default class CallStrategyPage extends Component {
       updateCompany,
     } = this.props;
 
-    const callTemplates = companyState.data.get('callTemplates');
+    const callTemplates = companyState.data.get('callStrategies');
     const index = findStrategyByName(callTemplates, callStrategy.get('name'));
 
     if (index > -1) {
@@ -78,7 +78,7 @@ export default class CallStrategyPage extends Component {
       return <Loader active inline />;
     }
 
-    const callStrategies = companyState.data.get('callTemplates');
+    const callStrategies = companyState.data.get('callStrategies');
 
     const strategy = callStrategies.find(x => x.get('name') === this.state.callStrategy);
 
@@ -103,7 +103,7 @@ export default class CallStrategyPage extends Component {
       return <Loader active inline />;
     }
 
-    const callStrategies = companyState.data.get('callTemplates');
+    const callStrategies = companyState.data.get('callStrategies');
 
     const options = callStrategies.map((strategy, index) => {
       return {
@@ -167,7 +167,7 @@ export default class CallStrategyPage extends Component {
       updateCompany,
     } = this.props;
 
-    const strategies = companyState.data.get('callTemplates');
+    const strategies = companyState.data.get('callStrategies');
 
     const index = findStrategyByName(strategies, name);
 
@@ -192,7 +192,7 @@ export default class CallStrategyPage extends Component {
       updateCompany,
     } = this.props;
 
-    const strategies = companyState.data.get('callTemplates');
+    const strategies = companyState.data.get('callStrategies');
     const index = this.findStrategyByName(strategies, callStrategy);
 
     if (index > -1) {

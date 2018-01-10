@@ -54,7 +54,7 @@ export default class NewCallPage extends Component {
       return <Loader active inline />;
     }
 
-    const callStrategies = company.get('callTemplates');
+    const callStrategies = company.get('callStrategies');
     const callStrategy = getStrategyByName(callStrategies, this.state.selectedStrategy);
 
     const callStrategyListProps = {
