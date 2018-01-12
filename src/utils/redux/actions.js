@@ -27,6 +27,31 @@ export const createMeteorCallAction = (config) => {
   };
 };
 
+const extractError = (response) => {
+  const retVal = {};
+
+  if (response.error && response.error.apierror) {
+    const {
+      error: {
+        apierror,
+      },
+    } = response;
+    retVal.message = apierror.message;
+    retVal.error = {
+      ...apierror,
+      statusCode: response.statusCode,
+    };
+  } else {
+    retVal.message = 'Unknown error occurred.';
+    retVal.error = {
+      ...response.error,
+      statusCode: response.statusCode,
+    };
+  }
+
+  return retVal;
+};
+
 const execAction = (config) => {
   return (dispatch, getState) => {
     const {
@@ -47,7 +72,8 @@ const execAction = (config) => {
         ...actionParams,
       }).then((response) => {
         dispatch(onSuccess(response, getState()));
-      }, (error) => {
+      }, (response) => {
+        const error = extractError(response);
         dispatch(onFail(error, getState()));
       });
     }

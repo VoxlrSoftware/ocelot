@@ -50,7 +50,7 @@ const onVerifyReceived = (state, { payload }) => {
 
   let newState = state;
 
-  if (data.hasVerified) {
+  if (data.hasValidated) {
     newState = newState.merge({
       showSetPhoneModal: false,
     });

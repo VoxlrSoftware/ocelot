@@ -75,11 +75,9 @@ export default class CompanyInfo extends Component {
 
     const setPhoneNumberProps = {
       currentNumber: getPhoneNumber(companyState.data),
+      entityId: companyState.data.get('_id'),
       onClose: this.hideModal,
       onNumberSet: this.onNumberSet,
-      params: {
-        companyId: companyState.data.get('_id'),
-      },
       show: showModal,
       validateType: 'company',
     };

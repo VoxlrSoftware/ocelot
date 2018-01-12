@@ -1,4 +1,5 @@
 import {
+  createFetchAction,
   createMeteorCallAction,
   createMutateAction,
   createAction,
@@ -62,14 +63,13 @@ const [
 ]);
 
 export const getTwilioClientToken = () => {
-  return createMeteorCallAction({
-    callPath: 'getToken',
+  return createFetchAction({
     onFail: error => onTwilioTokenFailed({
       error,
     }),
     onRequest: onTwilioTokenRequested(),
-    onSuccess: data => onTwilioTokenReceived({ data }),
-    params: {},
+    onSuccess: data => onTwilioTokenReceived(data),
+    path: 'voice/token',
     shouldFetch: state => getTwilioToken(state).shouldFetch(),
   });
 };
@@ -77,70 +77,61 @@ export const getTwilioClientToken = () => {
 export const checkForValidationResult = (config) => {
   const {
     onNumberSet,
-    type,
+    requestId,
   } = config;
 
-  const callPath = type === 'account' ?
-    'account.checkVerification' :
-    'company.checkVerification';
-
-  return createMeteorCallAction({
-    callPath,
+  return createFetchAction({
     onFail: error => onPhoneVerificationFailed({
       error,
     }),
     onRequest: onPhoneVerificationRequested(),
     onSuccess: (data) => {
-      if (data.hasVerified) {
+      if (data.hasValidated) {
         onNumberSet();
       }
 
       return onPhoneVerificationReceived({ data });
     },
     params: {},
+    path: `validate/${requestId}`,
     shouldFetch: state => !getPhoneVerification(state).isFetching,
   });
 };
 
 export const validatePhoneNumber = (config) => {
   const {
+    entityId,
     extension,
     onNumberSet,
-    params = {},
     phoneNumber,
     type,
   } = config;
 
-  let path;
-
-  if (type === 'account') {
-    path = 'account';
-  } else {
-    path = `company/${params.companyId}`;
-  }
+  const params = {
+    entityId,
+    phoneNumber: {
+      extension,
+      number: phoneNumber,
+    },
+    type,
+  };
 
   return createMutateAction({
+    method: 'POST',
     onFail: error => onPhoneValidateFailed({
       error,
     }),
     onRequest: onPhoneValidateRequested(),
     onSuccess: (data) => {
-      if (data.error) {
-        return onPhoneValidateFailed({ error: data.error });
-      }
-
-      if (data.isValidated) {
+      if (data.hasValidated) {
         onNumberSet();
         return onPhoneValidateSuccess({ data });
       }
 
       return onPhoneValidateReceived({ data });
     },
-    params: {
-      extension,
-      number: phoneNumber,
-    },
-    path,
+    params,
+    path: 'validate',
     shouldFetch: state => !getPhoneValidation(state).isFetching,
   });
 };

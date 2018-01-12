@@ -29,9 +29,9 @@ export default class SetPhoneNumber extends Component {
   static propTypes = {
     checkForValidationResult: PropTypes.func.isRequired,
     currentNumber: PropTypes.string,
+    entityId: PropTypes.string,
     onClose: PropTypes.func.isRequired,
     onNumberSet: PropTypes.func.isRequired,
-    params: PropTypes.object,
     phoneValidation: PropTypes.instanceOf(Thunk).isRequired,
     phoneVerification: PropTypes.instanceOf(Thunk).isRequired,
     show: PropTypes.bool,
@@ -148,9 +148,9 @@ export default class SetPhoneNumber extends Component {
 
   verify = () => {
     this.props.validatePhoneNumber({
+      entityId: this.props.entityId,
       extension: this.state.extension,
       onNumberSet: this.props.onNumberSet,
-      params: this.props.params,
       phoneNumber: this.state.phoneNumber,
       type: this.props.validateType,
     });
@@ -160,12 +160,12 @@ export default class SetPhoneNumber extends Component {
     const {
       checkForValidationResult,
       onNumberSet,
-      validateType,
+      phoneValidation,
     } = props;
 
     checkForValidationResult({
       onNumberSet,
-      type: validateType,
+      requestId: phoneValidation.data.get('id'),
     });
   };
 
@@ -182,13 +182,12 @@ export default class SetPhoneNumber extends Component {
       onNumberSet,
       phoneValidation,
       phoneVerification,
-      validateType,
     } = props;
 
     const validationData = phoneValidation.data || Immutable.Map();
     const verificationData = phoneVerification.data || Immutable.Map();
 
-    if (verificationData.get('hasVerified') || (this.timeout && !validationData.get('validationCode'))) {
+    if (verificationData.get('hasValidated') || (this.timeout && !validationData.get('validationCode'))) {
       return this.stopPoll();
     }
 
@@ -200,7 +199,7 @@ export default class SetPhoneNumber extends Component {
       this.timeout = setInterval(() => {
         checkForValidationResult({
           onNumberSet,
-          type: validateType,
+          requestId: phoneValidation.data.get('id'),
         });
       }, 5000);
     }

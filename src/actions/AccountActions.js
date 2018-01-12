@@ -1,5 +1,6 @@
 import {
   createAction,
+  createFetchAction,
   createMeteorCallAction,
   createMultipleActions,
 } from '../utils/redux/actions';
@@ -28,8 +29,7 @@ const [
 ]);
 
 export const fetchAccount = (accountId) => {
-  return createMeteorCallAction({
-    callPath: 'getAccount',
+  return createFetchAction({
     onFail: error => onAccountFetchFailed({
       accountId,
       error,
@@ -42,13 +42,9 @@ export const fetchAccount = (accountId) => {
     }),
     onRequest: onAccountFetchRequested({ accountId }),
     onSuccess: (data) => {
-      if (typeof data === 'undefined') {
-        return onAccountFetchFailed({ accountId });
-      }
-
       return onAccountFetchSuccess({ accountId, data });
     },
-    params: {},
+    path: 'account',
     shouldFetch: state => getIsLoggedIn(state) && getAccountThunk(state).shouldFetch(),
   });
 };

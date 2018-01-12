@@ -18,5 +18,5 @@ export const formatPhoneNumber = (phoneNumber) => {
 };
 
 export const getPhoneNumber = (state) => {
-  return state && state.get('phoneNumber');
+  return state && state.get('phoneNumber') && state.get('phoneNumber').get('number');
 };

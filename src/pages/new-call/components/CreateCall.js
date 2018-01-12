@@ -248,11 +248,12 @@ export default class CallStrategyList extends Component {
     } = this.props;
 
     const setPhoneNumberProps = {
-      currentNumber: getPhoneNumber(account.get('profile')),
+      currentNumber: getPhoneNumber(account),
+      entityId: account.get('id'),
       onClose: this.hideModal,
       onNumberSet: this.onNumberSet,
       show: showModal,
-      validateType: 'account',
+      validateType: 'user',
     };
 
     return (
