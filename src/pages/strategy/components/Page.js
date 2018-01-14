@@ -37,7 +37,6 @@ export default class CallStrategyPage extends Component {
 
   state = {
     callStrategy: null,
-    newStrategyName: '',
     showConfirm: false,
   };
 
@@ -53,16 +52,16 @@ export default class CallStrategyPage extends Component {
       updateCompany,
     } = this.props;
 
-    const callTemplates = companyState.data.get('callStrategies');
-    const index = findStrategyByName(callTemplates, callStrategy.get('name'));
+    const callStrategies = companyState.data.get('callStrategies');
+    const index = findStrategyByName(callStrategies, callStrategy.get('name'));
 
     if (index > -1) {
-      const newCallTemplates = callTemplates.set(index, callStrategy);
+      const newCallStrategies = callStrategies.set(index, callStrategy);
 
       updateCompany({
-        companyId: companyState.data.get('_id'),
+        companyId: companyState.data.get('id'),
         newValues: {
-          callTemplates: newCallTemplates.toJS(),
+          callStrategies: newCallStrategies.toJS(),
         },
       });
     }
@@ -178,9 +177,9 @@ export default class CallStrategyPage extends Component {
       });
 
       updateCompany({
-        companyId: companyState.data.get('_id'),
+        companyId: companyState.data.get('id'),
         newValues: {
-          callTemplates: newStrategies.toJS(),
+          callStrategies: newStrategies.toJS(),
         },
       });
     }
@@ -199,9 +198,9 @@ export default class CallStrategyPage extends Component {
       const newStrategies = strategies.delete(index);
 
       updateCompany({
-        companyId: companyState.data.get('_id'),
+        companyId: companyState.data.get('id'),
         newValues: {
-          callTemplates: newStrategies.toJS(),
+          callStrategies: newStrategies.toJS(),
         },
       });
       this.setState({

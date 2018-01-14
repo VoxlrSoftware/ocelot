@@ -53,13 +53,25 @@ export default class CallStrategyList extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.callActive && this.props.callActive) {
-      const callSid = this.props.twilioConnection.mediaStream.callSid;
-      this.props.startRecording(callSid);
+      const {
+        twilioConnection: {
+          mediaStream: {
+            callSid,
+          },
+        },
+      } = this.props;
+      // this.props.startRecording(callSid);
     }
 
     if (prevProps.callActive && !this.props.callActive) {
-      const callSid = prevProps.twilioConnection.mediaStream.callSid;
-      this.props.stopRecording({ callSid });
+      const {
+        twilioConnection: {
+          mediaStream: {
+            callSid,
+          },
+        },
+      } = prevProps;
+      // this.props.stopRecording({ callSid });
     }
   }
 
@@ -212,12 +224,12 @@ export default class CallStrategyList extends Component {
     const selectedStrategyObj = getStrategyByName(company.get('callStrategies'), selectedStrategy);
 
     connectToVoice({
-      accountId: account.get('_id'),
+      accountId: account.get('id'),
+      callStrategyId: selectedStrategyObj.get('id'),
       callerId: this.getCallerID(),
-      companyId: company.get('_id'),
-      companyName: company.get('Name'),
+      companyId: company.get('id'),
+      companyName: company.get('name'),
       customerNumber: this.state.phoneNumber,
-      selectedTemplateName: selectedStrategyObj.get('name'),
     });
   }
 
@@ -232,9 +244,10 @@ export default class CallStrategyList extends Component {
       return;
     }
 
-    connectRecording({
-      afterConnect: this.startTwilioCall.bind(this, this.props),
-    });
+    // connectRecording({
+    //   afterConnect: this.startTwilioCall.bind(this, this.props),
+    // });
+    this.startTwilioCall(this.props);
   };
 
   hideModal = () => {

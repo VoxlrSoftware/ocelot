@@ -52,7 +52,7 @@ const muteHandler = (dispatch, mute, connection) => {
 };
 
 const connectHandler = (dispatch, connection) => {
-  connection.accept(acceptHandler.bind(this.dispatch));
+  connection.accept(acceptHandler.bind(this, dispatch));
   connection.mute(muteHandler.bind(this, dispatch));
 
   dispatch({
