@@ -142,7 +142,7 @@ export const connectToVoice = (config) => {
       companyName,
       customerNumber,
       selectedTemplateName,
-      userID: accountId,
+      userId: accountId,
     });
 
     dispatch({

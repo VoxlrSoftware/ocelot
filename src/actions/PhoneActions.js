@@ -1,11 +1,13 @@
 import {
   createFetchAction,
-  createMeteorCallAction,
   createMutateAction,
   createAction,
   createMultipleActions,
 } from '../utils/redux/actions';
 import {
+  CALL_REQUEST_FAILED,
+  CALL_REQUEST_INITIATED,
+  CALL_REQUEST_RECEIVED,
   CREATE_CALL_SET_PHONE_NUMBER_CANCELED,
   CREATE_CALL_SET_PHONE_NUMBER_REQUESTED,
   TWILIO_CLIENT_TOKEN_FAILED,
@@ -21,6 +23,7 @@ import {
 } from '../actionTypes';
 
 import {
+  getCallRequest,
   getPhoneValidation,
   getPhoneVerification,
   getTwilioToken,
@@ -133,5 +136,43 @@ export const validatePhoneNumber = (config) => {
     params,
     path: 'validate',
     shouldFetch: state => !getPhoneValidation(state).isFetching,
+  });
+};
+
+const [
+  callRequestFailed,
+  callRequestInitiated,
+  callRequestReceived,
+] = createMultipleActions([
+  CALL_REQUEST_FAILED,
+  CALL_REQUEST_INITIATED,
+  CALL_REQUEST_RECEIVED,
+]);
+
+export const requestNewCall = (config) => {
+  const {
+    callerId,
+    customerNumber,
+    strategyId,
+    userId,
+  } = config;
+
+  return createMutateAction({
+    method: 'POST',
+    onFail: error => callRequestFailed({
+      error,
+    }),
+    onRequest: callRequestInitiated(),
+    onSuccess: (data) => {
+      return callRequestReceived({ data });
+    },
+    params: {
+      callerId,
+      customerNumber,
+      strategyId,
+      userId,
+    },
+    path: 'call/request',
+    shouldFetch: state => !getCallRequest(state).isFetching,
   });
 };

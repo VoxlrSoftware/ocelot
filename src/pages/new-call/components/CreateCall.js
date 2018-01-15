@@ -33,6 +33,8 @@ export default class CallStrategyList extends Component {
     connectToVoice: PropTypes.func.isRequired,
     onStrategySelected: PropTypes.func,
     recordingSocketState: ImmutablePropTypes.map.isRequired,
+    requestId: PropTypes.string,
+    requestNewCall: PropTypes.func.isRequired,
     requestSetPhoneNumber: PropTypes.func.isRequired,
     selectedStrategy: PropTypes.string,
     setAccountStale: PropTypes.func.isRequired,
@@ -52,6 +54,11 @@ export default class CallStrategyList extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (!prevProps.requestId && this.props.requestId) {
+      console.log('made it here with request', this.props.requestId);
+      // this.startTwilioCall(this.props, requestId);
+    }
+
     if (!prevProps.callActive && this.props.callActive) {
       const {
         twilioConnection: {
@@ -213,7 +220,7 @@ export default class CallStrategyList extends Component {
     this.props.requestSetPhoneNumber();
   };
 
-  startTwilioCall = (props) => {
+  startTwilioCall = (props, callRequest) => {
     const {
       account,
       company,
@@ -235,6 +242,9 @@ export default class CallStrategyList extends Component {
 
   startCall = () => {
     const {
+      account,
+      company,
+      requestNewCall,
       connectRecording,
       selectedStrategy,
       twilioIsReady,
@@ -243,6 +253,15 @@ export default class CallStrategyList extends Component {
     if (!selectedStrategy || !this.state.phoneNumber || !twilioIsReady) {
       return;
     }
+
+    const selectedStrategyObj = getStrategyByName(company.get('callStrategies'), selectedStrategy);
+
+    requestNewCall({
+      callerId: this.getCallerID(),
+      customerNumber: this.state.phoneNumber,
+      strategyId: selectedStrategyObj.get('id'),
+      userId: account.get('id'),
+    });
 
     // connectRecording({
     //   afterConnect: this.startTwilioCall.bind(this, this.props),

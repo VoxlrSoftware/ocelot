@@ -5,9 +5,11 @@ import { setAccountStale } from '../../../actions/AccountActions';
 import {
   cancelSetPhoneNumber,
   getTwilioClientToken,
+  requestNewCall,
   requestSetPhoneNumber,
 } from '../../../actions/PhoneActions';
 import {
+  getCallRequest,
   getShowSetPhoneModal,
   getTwilioToken,
 } from '../../../reducers/PhoneReducer';
@@ -37,14 +39,17 @@ const mapStateToProps = (state) => {
   const twilioIsReady = getTwilioIsReady(state);
   const twilioConnectionState = getTwilioConnectionState(state);
   const recordingSocketState = getRecordingSocketState(state);
+  const callRequest = getCallRequest(state);
 
   const showDialer = twilioConnectionState.isFetching || !!twilioConnectionState.data;
   const twilioConnection = twilioConnectionState.data;
   const callActive = getTwilioCallActive(state);
+  const requestId = callRequest.data && callRequest.data.get('id');
 
   return {
     callActive,
     recordingSocketState,
+    requestId,
     showDialer,
     showModal,
     twilioConnection,
@@ -58,6 +63,7 @@ const mapDispatchToProps = {
   connectRecording,
   connectToVoice,
   getTwilioClientToken,
+  requestNewCall,
   requestSetPhoneNumber,
   setAccountStale,
   setupTwilio,
