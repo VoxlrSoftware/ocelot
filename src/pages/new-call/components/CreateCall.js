@@ -55,8 +55,7 @@ export default class CallStrategyList extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.requestId && this.props.requestId) {
-      console.log('made it here with request', this.props.requestId);
-      // this.startTwilioCall(this.props, requestId);
+      this.startTwilioCall(this.props, requestId);
     }
 
     if (!prevProps.callActive && this.props.callActive) {
@@ -220,23 +219,9 @@ export default class CallStrategyList extends Component {
     this.props.requestSetPhoneNumber();
   };
 
-  startTwilioCall = (props, callRequest) => {
-    const {
-      account,
-      company,
-      connectToVoice,
-      selectedStrategy,
-    } = props;
-
-    const selectedStrategyObj = getStrategyByName(company.get('callStrategies'), selectedStrategy);
-
-    connectToVoice({
-      accountId: account.get('id'),
-      callStrategyId: selectedStrategyObj.get('id'),
-      callerId: this.getCallerID(),
-      companyId: company.get('id'),
-      companyName: company.get('name'),
-      customerNumber: this.state.phoneNumber,
+  startTwilioCall = (requestId) => {
+    this.props.connectToVoice({
+      requestId,
     });
   }
 
@@ -266,7 +251,6 @@ export default class CallStrategyList extends Component {
     // connectRecording({
     //   afterConnect: this.startTwilioCall.bind(this, this.props),
     // });
-    this.startTwilioCall(this.props);
   };
 
   hideModal = () => {

@@ -117,12 +117,7 @@ export const setupTwilio = (config) => {
 
 export const connectToVoice = (config) => {
   const {
-    accountId,
-    callerId,
-    companyId,
-    companyName,
-    customerNumber,
-    selectedTemplateName,
+    requestId,
   } = config;
 
   return (dispatch, getState) => {
@@ -137,12 +132,7 @@ export const connectToVoice = (config) => {
     Twilio().Device.error(errorHandler.bind(this, dispatch));
     Twilio().Device.disconnect(disconnectHandler.bind(this, dispatch));
     Twilio().Device.connect({
-      callerId,
-      companyId,
-      companyName,
-      customerNumber,
-      selectedTemplateName,
-      userId: accountId,
+      requestId,
     });
 
     dispatch({
