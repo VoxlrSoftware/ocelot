@@ -4,7 +4,11 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './src/index.js'
+  ],
   devtool: 'cheap-eval-source-map',
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

@@ -55,7 +55,7 @@ export default class CallStrategyList extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.requestId && this.props.requestId) {
-      this.startTwilioCall(this.props, requestId);
+      this.startTwilioCall(this.props.requestId);
     }
 
     if (!prevProps.callActive && this.props.callActive) {
