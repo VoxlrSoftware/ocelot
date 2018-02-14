@@ -1,5 +1,6 @@
 import {
   createMeteorCallAction,
+  createMutateAction,
   createMultipleActions,
 } from '../utils/redux/actions';
 import {
@@ -25,26 +26,20 @@ export const updateCallByCallSid = (config) => {
     onSuccess,
   } = config;
 
-  return createMeteorCallAction({
-    callPath: 'calls.updateOneByCallSid',
+  return createMutateAction({
     onFail: error => onCallUpdateFailed({
       error,
     }),
     onRequest: onCallUpdateRequested({ callSid }),
     onSuccess: (data) => {
-      if (data.error) {
-        return onCallUpdateFailed({
-          error: data.error,
-        });
-      }
-
       onSuccess();
       return onCallUpdateSuccess({ callSid, data });
     },
     params: {
       callSid,
-      newValues,
+      ...newValues,
     },
+    path: `call`,
     shouldFetch: () => true,
   });
 };

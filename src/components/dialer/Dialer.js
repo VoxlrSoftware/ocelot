@@ -166,8 +166,8 @@ export default class Dialer extends Component {
         {
           callOutcomes.map((outcome) => {
             return (
-              <Button fluid key={ outcome } onClick={ () => this.setOutcome(outcome) }>
-                { outcome }
+              <Button fluid key={ outcome.value } onClick={ () => this.setOutcome(outcome.value) }>
+                { outcome.text }
               </Button>
             );
           })

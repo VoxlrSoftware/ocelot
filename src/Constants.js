@@ -9,15 +9,15 @@ export const CALL_OUTCOME_SUMMARY = 'callOutcome';
 
 export const VOXLR_PHONE = '+19193360458';
 export const DEBUG_MODE = process.env.NODE_ENV === 'development';
-export const RECORDING_URL = 'CHANGE_THIS';
-export const VOXLR_URL = 'CHANGE_THIS';
+export const RECORDING_URL = 'http://localhost:5000';
+export const VOXLR_URL = 'http://localhost:8080';
 export const MARMOSET_URL = 'http://localhost:8080';
 
 export const CALL_OUTCOMES = {
-  LOST: 'Lost',
-  PROGRESS: 'Progress Made',
-  VOICEMAIL: 'Voicemail/Left message',
-  WON: 'Won',
+  LOST: { text: 'Lost', value: 'Lost' },
+  PROGRESS: { text: 'Progress', value: 'Progress Made' },
+  VOICEMAIL: { text: 'Voicemail/Left message', value: 'Voicemail' },
+  WON: { text: 'Won', value: 'Won' },
 };
 
 export const CONVERSATION_OUTCOMES = [

@@ -24,8 +24,8 @@ const getStatData = (outcome) => {
   return {
     data: 0,
     isLoading: false,
-    label: outcome,
-    name: outcome,
+    label: outcome.text,
+    name: outcome.value,
   };
 };
 

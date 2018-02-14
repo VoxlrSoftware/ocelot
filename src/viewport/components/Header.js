@@ -85,7 +85,7 @@ export default class Header extends Component {
 
       return [
         <Menu.Item link onClick={ this.navTo('/call/new') }>New Call</Menu.Item>,
-        <Menu.Item link onClick={ this.navTo(`/employee/${account.get('_id')}`) }>My Calls</Menu.Item>,
+        <Menu.Item link onClick={ this.navTo(`/employee/${account.get('id')}`) }>My Calls</Menu.Item>,
         isAdmin ? <Menu.Item link onClick={ this.navTo('/company') }>Company</Menu.Item> : null,
         isAdmin ? <Dropdown { ...dropdownProps } >
           <Dropdown.Menu>
