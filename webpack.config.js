@@ -50,17 +50,6 @@ module.exports = {
         exclude: /(node_modules)/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: [
-              'react',
-              'stage-2',
-              'babel-preset-env'
-            ],
-            plugins: [
-              'babel-plugin-transform-class-properties',
-              'babel-plugin-transform-strict-mode'
-            ]
-          }
         }
       },
       {

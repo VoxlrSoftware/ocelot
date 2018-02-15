@@ -55,10 +55,10 @@ export default class CallStrategyList extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.requestId && this.props.requestId) {
-      // this.props.connectRecording({
-      //   afterConnect: this.startTwilioCall.bind(this, this.props.requestId),
-      // });
-      this.startTwilioCall(this.props.requestId);
+      this.props.connectRecording({
+        afterConnect: this.startTwilioCall.bind(this, this.props.requestId),
+      });
+      // this.startTwilioCall(this.props.requestId);
     }
 
     if (!prevProps.callActive && this.props.callActive) {
@@ -69,7 +69,7 @@ export default class CallStrategyList extends Component {
           },
         },
       } = this.props;
-      // this.props.startRecording(callSid);
+      this.props.startRecording(callSid);
     }
 
     if (prevProps.callActive && !this.props.callActive) {
@@ -80,7 +80,7 @@ export default class CallStrategyList extends Component {
           },
         },
       } = prevProps;
-      // this.props.stopRecording({ callSid });
+      this.props.stopRecording({ callSid });
     }
   }
 

@@ -1,3 +1,6 @@
+import wav from 'wav';
+import blobStream from 'blob-stream';
+import fileSaver from 'file-saver';
 import Socket from 'socket.io-client';
 import stream from 'stream';
 import getUserMedia from 'get-user-media-promise';
@@ -24,6 +27,8 @@ const START_COMMAND_MESSAGE = 'stream ready';
 const STOP_COMMAND = 'stop';
 
 const CALL_INIT_COMMAND = 'callInit';
+
+let fileStream;
 
 const onConnect = (dispatch, socket, afterConnect) => {
   dispatch({
@@ -120,7 +125,19 @@ export const stopRecording = (config) => {
     } catch (e) { console.log('Unable to stop mic stream', e); }
 
     try {
-      echoStream.end();
+      console.log('Closing fileStream');
+
+      const blobbyStream = blobStream();
+
+      fileStream.pipe(blobbyStream)
+        .on('finish', () => {
+          var blob = blobbyStream.toBlob('audio/wav');
+          fileSaver.saveAs(blob, "audio.wav", { type: 'audio/wav' });
+        });
+      // var URLObject = window.webkitURL || window.URL;
+      // var url = URLObject.createObjectURL(b);
+      // document.write("<a href='"+url+"'>play</a>");
+
     } catch (e) { console.log('Unable to stop echo stream', e); }
 
     const socket = socketState.get('socket');
@@ -175,25 +192,32 @@ export const startRecording = (callSid) => {
     const micStream = new MicrophoneStream({ objectMode: true });
     const echoStream = new stream.Writable();
 
-    echoStream._write = (chunk, encoding, done) => {
-      const data = Array.from(new Int16Array(chunk.buffer));
-      try {
-        socket.emit('audio stream', {
-          data,
-        });
-      } catch (e) {
-        console.log(e);
-      }
-      done();
-    };
+    // echoStream._write = (chunk, encoding, done) => {
+    //   const data = Array.from(new Int16Array(chunk.buffer));
+    //   try {
+    //     socket.emit('audio stream', {
+    //       data,
+    //     });
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    //   done();
+    // };
 
     micStream.on('format', (format) => {
+      fileStream = new wav.Writer({
+        channels: 1,
+        sampleRate: 16000,
+      });
+
+      console.log('Writing file to demo.wav');
+
       const l16stream = new WebAudiol16Stream({
         downsample: true,
         objectMode: true,
         sourceSampleRate: format.sampleRate,
       });
-      micStream.pipe(l16stream).pipe(echoStream);
+      micStream.pipe(l16stream).pipe(fileStream);
     });
 
     getUserMedia({ audio: true, video: false })
