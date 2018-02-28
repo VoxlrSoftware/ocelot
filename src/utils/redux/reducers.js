@@ -81,6 +81,16 @@ export const createThunkPagingReducers = () => [
     state.setPagination(state.pagination.setPage(page).setPageSize(pageSize)).setIsStale(true),
 ];
 
+/* eslint-disable no-param-reassign */
+export const createAndAssociateThunkReducers = (thunkKey, actionTypes) => {
+  const reducers = createThunkReducers(thunkKey);
+
+  return actionTypes.reduce((actionMap, actionType, index) => {
+    actionMap[actionType] = reducers[index];
+    return actionMap;
+  }, {});
+};
+
 export const getThunkInitialState = (override) => {
   return Thunk.fromJS(override);
 };

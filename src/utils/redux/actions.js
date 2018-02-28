@@ -1,6 +1,11 @@
 import { doGet, makeRequest } from '../MarmosetAPI';
 import { getAuth } from '../../reducers/AccountReducer';
 
+const ActionException = message => ({
+  message,
+  type: 'ActionException',
+});
+
 export const createMeteorCallAction = (config) => {
   return (dispatch, getState) => {
     const {
@@ -25,6 +30,13 @@ export const createMeteorCallAction = (config) => {
       // });
     }
   };
+};
+
+export const createAction =
+  type => (payload, meta = {}) => { return { payload: payload || {}, type, ...meta }; };
+
+export const createMultipleActions = (types) => {
+  return types.map(type => createAction(type));
 };
 
 const extractError = (response) => {
@@ -52,6 +64,18 @@ const extractError = (response) => {
   return retVal;
 };
 
+const getAction = (action) => {
+  if (typeof action === 'function') {
+    return action;
+  }
+
+  if (typeof action === 'string') {
+    return createAction(action);
+  }
+
+  throw ActionException(`Action must be a string or a function ${action}`);
+};
+
 const execAction = (config) => {
   return (dispatch, getState) => {
     const {
@@ -64,17 +88,17 @@ const execAction = (config) => {
     } = config;
 
     if (shouldFetch(getState())) {
-      dispatch(onRequest);
+      dispatch(getAction(onRequest));
 
       const auth = getAuth(getState());
       action({
         auth,
         ...actionParams,
       }).then((response) => {
-        dispatch(onSuccess(response, getState()));
+        dispatch(getAction(onSuccess)(response, getState()));
       }, (response) => {
         const error = extractError(response);
-        dispatch(onFail(error, getState()));
+        dispatch(getAction(onFail)(error, getState()));
       });
     }
   };
@@ -118,9 +142,3 @@ export const createMutateAction = (config) => {
   });
 };
 
-export const createAction =
-  type => (payload, meta = {}) => { return { payload: payload || {}, type, ...meta }; };
-
-export const createMultipleActions = (types) => {
-  return types.map(type => createAction(type));
-};

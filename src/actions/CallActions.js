@@ -1,5 +1,4 @@
 import {
-  createMeteorCallAction,
   createMutateAction,
   createMultipleActions,
 } from '../utils/redux/actions';
@@ -37,7 +36,8 @@ export const updateCallByCallSid = (config) => {
       callSid,
       ...newValues,
     },
-    path: `call`,
+    path: 'call',
     shouldFetch: () => true,
   });
 };
+

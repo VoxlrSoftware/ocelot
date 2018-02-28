@@ -2,38 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import fetch from '../../../utils/redux/fetch';
 import Summary from '../../../components/summary/Summary';
-import ChartContainer from '../../../components/chart/ChartContainer';
-
 import {
-  getCallStrategy,
-  getCallStrategyChart,
-  getConversationRatio,
-  getConversationRatioChart,
-  getTalkRatio,
-  getTalkRatioChart,
+  getAverages,
+  getRollups,
 } from '../reducers/SummaryReducer';
 import {
-  fetchCallStrategy,
-  fetchCallStrategyChart,
-  fetchConversationRatio,
-  fetchConversationRatioChart,
-  fetchCustomerTalkRatio,
-  fetchCustomerTalkRatioChart,
+  fetchAverages,
+  fetchRollups,
 } from '../actions/SummaryActions';
-import CallStrategyBuilder from '../../../utils/charts/chart-builders/CallStrategy';
-import ConversationRatioBuilder from '../../../utils/charts/chart-builders/ConversationRatio';
-import TalkRatioBuilder from '../../../utils/charts/chart-builders/TalkRatio';
 import {
-  CALL_STRATEGY_SUMMARY,
+  DETECTION_RATIO_SUMMARY,
   CONVERSATION_RATIO_SUMMARY,
   CUSTOMER_TALK_RATIO_SUMMARY,
 } from '../../../Constants';
-import { calculateConversationRatio } from '../../../utils/types/Calls';
 
-const renderPercent = (data) => {
-  const parsed = (data || 0) * 100;
-  return `${parsed.toFixed(1)} %`;
-};
+const FIELDS_TO_FETCH = [
+  'detectionRatio',
+  'customerTalkRatio',
+];
 
 const getStatistics = (state) => {
   return [
@@ -61,83 +47,31 @@ const getStatistics = (state) => {
   ];
 };
 
-const getChartProps = (props) => {
-  const {
-    companyId,
-    endDate,
-    startDate,
-  } = props;
-
-  const buildParams = {
-    endDate,
-    startDate,
-  };
-
-  const fetchParams = {
-    companyId,
-    ...buildParams,
-  };
-
-  return {
-    [CALL_STRATEGY_SUMMARY]: {
-      buildParams,
-      chartBuilder: CallStrategyBuilder,
-      fetchChart: dispatch => dispatch(fetchCallStrategyChart(fetchParams)),
-      selector: getCallStrategyChart,
-    },
-    [CONVERSATION_RATIO_SUMMARY]: {
-      buildParams,
-      chartBuilder: ConversationRatioBuilder,
-      fetchChart: dispatch => dispatch(fetchConversationRatioChart(fetchParams)),
-      selector: getConversationRatioChart,
-    },
-    [CUSTOMER_TALK_RATIO_SUMMARY]: {
-      buildParams,
-      chartBuilder: TalkRatioBuilder,
-      fetchChart: dispatch => dispatch(fetchCustomerTalkRatioChart(fetchParams)),
-      selector: getTalkRatioChart,
-    },
-  };
-};
-
-const renderComponent = (props) => {
-  return <ChartContainer { ...props } />;
-};
-
 const mapStateToProps = (state, props) => {
-  const statistics = getStatistics(state);
-  const renderProps = getChartProps(props);
-
   return {
-    renderComponent,
-    renderProps,
-    statistics,
+
   };
 };
 
 const mapDispatchToProps = {
-  fetchCallStrategy,
-  fetchCallStrategyChart,
-  fetchConversationRatio,
-  fetchConversationRatioChart,
-  fetchCustomerTalkRatio,
-  fetchCustomerTalkRatioChart,
+  fetchAverages,
+  fetchRollups,
 };
 
 const fetchFn = (props) => {
   const {
     companyId,
     endDate,
-    fetchCallStrategy,
-    fetchConversationRatio,
-    fetchCustomerTalkRatio,
+    fetchAverages,
+    fetchRollups,
     startDate,
   } = props;
 
+  const fields = FIELDS_TO_FETCH;
+
   const promises = [
-    fetchCallStrategy({ companyId, endDate, startDate }),
-    fetchConversationRatio({ companyId, endDate, startDate }),
-    fetchCustomerTalkRatio({ companyId, endDate, startDate }),
+    fetchAverages({ companyId, endDate, fields, startDate }),
+    fetchRollups({ companyId, endDate, fields, startDate }),
   ];
 
   return Promise.all(promises);

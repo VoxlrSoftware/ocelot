@@ -1,6 +1,7 @@
 export const SORT_ORDER_ASC = 'ASC';
 export const SORT_ORDER_DESC = 'DESC';
 
+export const DETECTION_RATIO_SUMMARY = 'detectionRatio';
 export const CALL_STRATEGY_SUMMARY = 'callStrategy';
 export const CUSTOMER_TALK_RATIO_SUMMARY = 'customerTalkRatio';
 export const CONVERSATION_RATIO_SUMMARY = 'conversationRatio';
