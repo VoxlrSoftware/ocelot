@@ -238,7 +238,11 @@ export default class Dialer extends Component {
       completeCall,
     } = this.props;
 
-    const callSid = connection.mediaStream.callSid;
+    const {
+      mediaStream: {
+        callSid,
+      },
+    } = connection;
 
     const newValues = {
       callOutcome: value,
@@ -247,8 +251,8 @@ export default class Dialer extends Component {
     this.props.updateCallByCallSid({
       callSid,
       newValues,
-      onSuccess: () => completeCall(),
     });
+    completeCall();
   };
 
   clearTimer = () => {

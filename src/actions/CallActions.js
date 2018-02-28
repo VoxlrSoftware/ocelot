@@ -23,7 +23,6 @@ export const updateCallByCallSid = (config) => {
   const {
     callSid,
     newValues,
-    onSuccess,
   } = config;
 
   return createMutateAction({
@@ -32,7 +31,6 @@ export const updateCallByCallSid = (config) => {
     }),
     onRequest: onCallUpdateRequested({ callSid }),
     onSuccess: (data) => {
-      onSuccess();
       return onCallUpdateSuccess({ callSid, data });
     },
     params: {
