@@ -44,7 +44,7 @@ export const fetchAverages = (params) => {
       error,
     }),
     onRequest: COMPANY_SUMMARY_AVERAGES_REQUESTED,
-    onSuccess: data => onAveragesFetchSuccess(data),
+    onSuccess: data => onAveragesFetchSuccess({ data }),
     params: {
       endDate,
       fields,
@@ -68,7 +68,7 @@ export const fetchRollups = (params) => {
       error,
     }),
     onRequest: COMPANY_SUMMARY_ROLLUPS_REQUESTED,
-    onSuccess: data => onRollupsFetchSuccess(data),
+    onSuccess: data => onRollupsFetchSuccess({ data }),
     params: {
       endDate,
       fields,

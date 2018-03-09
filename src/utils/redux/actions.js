@@ -70,7 +70,7 @@ const getAction = (action) => {
   }
 
   if (typeof action === 'string') {
-    return createAction(action);
+    return createAction(action)();
   }
 
   throw ActionException(`Action must be a string or a function ${action}`);

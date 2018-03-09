@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import { Pagination } from './Pagination';
+import { getSafe as ImmutableGetSafe } from '../utils/Immutable';
 
 export class Thunk extends Immutable.Record({
   data: null,
@@ -30,6 +31,10 @@ export class Thunk extends Immutable.Record({
 
   shouldFetch() {
     return !this.get('isFetching') && this.get('isStale');
+  }
+
+  getSafe(...path) {
+    return ImmutableGetSafe(this.get('data'), ...path);
   }
 
   setData(data) {

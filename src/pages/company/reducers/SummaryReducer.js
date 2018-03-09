@@ -6,19 +6,21 @@ import {
   getThunkInitialState,
 } from '../../../utils/redux/reducers';
 import {
+  COMPANY_DATE_RANGE_CHANGED,
   COMPANY_SUMMARY_AVERAGES_REQUESTED,
   COMPANY_SUMMARY_AVERAGES_RECEIVED,
   COMPANY_SUMMARY_AVERAGES_FAILED,
   COMPANY_SUMMARY_ROLLUPS_REQUESTED,
   COMPANY_SUMMARY_ROLLUPS_RECEIVED,
   COMPANY_SUMMARY_ROLLUPS_FAILED,
+  LOCATION_CHANGED,
 } from '../../../actionTypes';
 import { COMPANY_PAGE_STATE_KEY } from '../Constants';
 
 export const stateKey = 'summary';
 const initialState = Immutable.fromJS({
-  averages: getThunkInitialState,
-  rollups: getThunkInitialState,
+  averages: getThunkInitialState(),
+  rollups: getThunkInitialState(),
 });
 
 const averagesReducers = createAndAssociateThunkReducers('averages', [
@@ -34,6 +36,8 @@ const rollupsReducers = createAndAssociateThunkReducers('rollups', [
 ]);
 
 export default createReducer(initialState, {
+  [COMPANY_DATE_RANGE_CHANGED]: () => initialState,
+  [LOCATION_CHANGED]: () => initialState,
   ...averagesReducers,
   ...rollupsReducers,
 });

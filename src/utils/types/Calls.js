@@ -1,3 +1,10 @@
+export const FIELDS = {
+  CONVERSATION: 'conversation',
+  CUSTOMER_TALK_RATIO: 'detectionRatio',
+  DETECTION_RATIO: 'customerTalkRatio',
+  TOTAL_COUNT: 'totalCount',
+};
+
 export const calculateConversationRatio = (data) => {
   if (!data) {
     return undefined;
@@ -20,3 +27,4 @@ export const formatPhoneNumber = (phoneNumber) => {
 export const getPhoneNumber = (state) => {
   return state && state.get('phoneNumber') && state.get('phoneNumber').get('number');
 };
+

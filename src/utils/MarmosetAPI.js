@@ -14,8 +14,15 @@ const getAccessToken = (auth) => {
       auth.access_token);
 };
 
+const defaultRequestProps = {
+  qsStringifyOptions: { arrayFormat: 'repeat' },
+};
+
 export const makeRequest = (opts) => {
-  let requestOpts = opts;
+  let requestOpts = {
+    ...defaultRequestProps,
+    ...opts,
+  };
 
   if (opts.auth) {
     const accessToken = getAccessToken(opts.auth);

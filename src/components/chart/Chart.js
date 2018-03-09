@@ -24,6 +24,7 @@ export default class Chart extends Component {
   static propTypes = {
     buildParams: PropTypes.object,
     chartBuilder: PropTypes.func.isRequired,
+    chartKey: PropTypes.string.isRequired,
     data: ImmutablePropTypes.list,
     isLoading: PropTypes.bool,
   };
@@ -48,6 +49,7 @@ export default class Chart extends Component {
 
   compareProps(nextProps) {
     return this.props.data !== nextProps.data ||
+      this.props.chartKey !== nextProps.chartKey ||
       !_.isEqual(this.props.buildParams, nextProps.buildParams) ||
       this.props.isLoading !== nextProps.isLoading;
   }
@@ -59,12 +61,10 @@ export default class Chart extends Component {
       data,
     } = props;
 
-    if (!data) {
-      return;
+    if (data) {
+      const chartConfig = chartBuilder({ data, renderTo: this.chartRef, ...buildParams });
+      this.chart = Highcharts.chart(chartConfig);
     }
-
-    const chartConfig = chartBuilder({ data, renderTo: this.chartRef, ...buildParams });
-    this.chart = Highcharts.chart(chartConfig);
   };
 
   render() {

@@ -1,4 +1,4 @@
-import { Iterable } from 'immutable';
+import { isIndexed, isCollection } from 'immutable';
 
 const validateDirectEquality = (a, b) => a === b;
 const validateNonExists = (a, b) => !a || !b;
@@ -26,8 +26,8 @@ const shallowMapEquals = (a, b) => {
     return true;
   }
 
-  if (Iterable.isIndexed(a)) {
-    return Iterable.isIndexed(b) ? shallowListEquals(a, b) : false;
+  if (isIndexed(a)) {
+    return isIndexed(b) ? shallowListEquals(a, b) : false;
   }
 
   return false;
@@ -56,4 +56,17 @@ export const shallowEquals = (a, b) => {
   }
 
   return true;
+};
+
+export const getSafe = (map, ...key) => {
+  if (!isCollection(map)) {
+    return map;
+  }
+
+  const curKey = key.length && key.shift();
+  if (map && map.has(curKey)) {
+    return getSafe(map.get(curKey), ...key);
+  }
+
+  return undefined;
 };

@@ -1,18 +1,20 @@
+import { defaultMemoize } from 'reselect';
 import {
   convertResultToMap,
   getInstantaneousAverage,
   getMovingAverage,
   mergeChartConfig,
 } from '../../charts';
+import { FIELDS } from '../../types/Calls';
 
-const patchResponse = (params) => {
+const patchResponse = defaultMemoize((params) => {
   const {
-    endDate,
     data,
+    endDate,
     startDate,
   } = params;
 
-  const result = convertResultToMap(data);
+  const result = convertResultToMap(data, FIELDS.DETECTION_RATIO);
 
   const chartConfig = {
     endDate,
@@ -26,7 +28,7 @@ const patchResponse = (params) => {
     instant,
     moving,
   };
-};
+});
 
 const buildChartData = (data, renderTo) => {
   const {
@@ -73,10 +75,11 @@ export default function builder(params) {
   const {
     data,
     endDate,
+    key,
     renderTo,
     startDate,
   } = params;
 
-  const chartData = patchResponse({ data: data.toJS(), endDate, startDate });
+  const chartData = patchResponse({ data: data.toJS(), endDate, key, startDate });
   return buildChartData(chartData, renderTo);
 }

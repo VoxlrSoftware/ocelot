@@ -71,7 +71,7 @@ export default class EmployeeListPage extends Component {
           <Segment>
             <SemanticHeader>Call Outcomes</SemanticHeader>
             <Divider />
-            <OutcomeContainer { ...outcomeProps } />
+            {/* <OutcomeContainer { ...outcomeProps } /> */}
           </Segment>
           <Segment>
             <SemanticHeader>Call Metrics</SemanticHeader>

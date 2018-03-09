@@ -1,11 +1,13 @@
+import { defaultMemoize } from 'reselect';
 import {
   convertResultToMap,
   getInstantaneousAverage,
   getMovingAverage,
   mergeChartConfig,
 } from '../../charts';
+import { FIELDS } from '../../types/Calls';
 
-const patchResponse = (params) => {
+const patchResponse = defaultMemoize((params) => {
   const {
     startDate,
     endDate,
@@ -17,12 +19,18 @@ const patchResponse = (params) => {
 
   response.forEach((resp) => {
     const {
-      _id,
-      results: data,
+      result: data,
+      timestamp,
     } = resp;
 
-    calls.push({ _id, results: (data.calls - data.conversations) / data.calls });
-    conversations.push({ _id, results: data.conversations / data.calls });
+    const totalCount = data[FIELDS.TOTAL_COUNT];
+    const conversationCount = data[FIELDS.CONVERSATION];
+
+    const nonConversationRatio = totalCount > 0 ? (totalCount - conversationCount) / totalCount : totalCount;
+    const conversationRatio = totalCount > 0 ? conversationCount / totalCount : totalCount;
+
+    calls.push({ result: nonConversationRatio, timestamp });
+    conversations.push({ result: conversationRatio, timestamp });
   });
 
   const callsResult = convertResultToMap(calls);
@@ -45,7 +53,7 @@ const patchResponse = (params) => {
     avgConversations,
     avgPercent,
   };
-};
+});
 
 const buildChartData = (data, renderTo) => {
   const {

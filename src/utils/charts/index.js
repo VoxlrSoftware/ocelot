@@ -54,16 +54,18 @@ const formatEdgeData = (params) => {
   return formattedResult;
 };
 
-export const convertResultToMap = (response) => {
+export const convertResultToMap = (response, key) => {
   const result = response.reduce((acc, item) => {
     const {
-      _id,
-      results,
+      timestamp,
+      result,
     } = item;
 
-    const date = new Date(_id).getTime();
+    const resultVal = key ? result[key] : result;
+
+    const date = new Date(timestamp).getTime();
     acc[date] = {
-      data: results,
+      data: resultVal,
       date,
     };
     return acc;
