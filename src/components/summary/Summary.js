@@ -31,6 +31,12 @@ export default class Summary extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.statistics !== this.props.statistics ||
+      nextProps.isLoading !== this.props.isLoading ||
+      nextState.currentTab !== this.state.currentTab;
+  }
+
   getStatistic = (statistic, index) => {
     const {
       renderComponent,
