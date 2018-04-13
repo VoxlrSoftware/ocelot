@@ -81,7 +81,7 @@ export default class EmployeePage extends Component {
             <Divider />
             <OutcomeContainer { ...outcomeProps } />
           </Segment>
-          <Segment>
+          <Segment> 
             <SemanticHeader>Call Metrics</SemanticHeader>
             <Divider />
             <SummaryContainer { ...summaryProps } />

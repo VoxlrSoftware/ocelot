@@ -20,7 +20,7 @@ export const stateKey = 'callList';
 
 const initialState = getThunkPagingInitialState({
   pagination: {
-    sortBy: 'createAt',
+    sortBy: 'createDate',
     sortOrder: SORT_ORDER_DESC,
   },
 });

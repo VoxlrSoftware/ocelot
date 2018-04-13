@@ -27,13 +27,13 @@ export default class Summary extends Component {
   };
 
   onRowClick = (entry) => {
-    navigate(`/call/${entry.get('_id')}`);
+    navigate(`/call/${entry.get('id')}`);
   };
 
   getCustomClasses = (entry) => {
     const classes = [];
 
-    if (!entry.get('isConversation')) {
+    if (!entry.get('conversation')) {
       classes.push('non-conversation');
     }
 
@@ -43,23 +43,23 @@ export default class Summary extends Component {
   buildColumns = () => {
     return [
       {
-        name: 'createAt',
+        name: 'createDate',
         render: (entry) => {
-          const value = entry.get('createAt');
+          const value = entry.get('createDate');
           return moment(value).format('MM-DD-YYYY hh:mm a');
         },
         text: 'Date',
       },
       {
-        dataIndex: 'callTemplate',
-        name: 'callTemplate',
+        dataIndex: 'callStrategyName',
+        name: 'callStrategyName',
         text: 'Call Template',
       },
       {
-        name: 'phoneNumber',
+        name: 'customerNumber',
         render: (entry) => {
-          const phoneNumber = entry.get('phoneNumber') || '';
-          return formatPhoneNumber(phoneNumber);
+          const phoneNumber = entry.get('customerNumber') || '';
+          return formatPhoneNumber(phoneNumber.toJS());
         },
         sortable: false,
         text: 'Phone Number',
@@ -76,14 +76,14 @@ export default class Summary extends Component {
         text: 'Duration',
       },
       {
-        name: 'callStrategy',
+        name: 'detectionRatio',
         render: (entry) => {
           const detected = entry.get('detectedPhraseCount');
           const total = entry.get('totalPhraseCount');
-          const percent = detected > 0 ? ((detected / total) * 100) : 0;
-          return `${detected}/${total} (${(percent).toFixed(1)} %)`;
+          const detectionRatio = entry.get('detectionRatio');
+          return `${detected}/${total} (${(detectionRatio).toFixed(1)} %)`;
         },
-        text: 'Call Strategy',
+        text: 'Detection Ratio',
       },
       {
         dataIndex: 'callOutcome',

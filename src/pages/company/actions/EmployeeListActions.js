@@ -1,4 +1,4 @@
-import { createMeteorCallAction } from '../../../utils/redux/actions';
+import { createFetchAction } from '../../../utils/redux/actions';
 import { getPaginationValues } from '../../../utils/pagination';
 import {
   EMPLOYEE_SUMMARY_LIST_FETCH_FAILED,
@@ -10,10 +10,6 @@ import {
 import {
   getEmployeeListThunk,
 } from '../reducers/EmployeeListReducer';
-
-const onEmployeeListFetchRequested = {
-  type: EMPLOYEE_SUMMARY_LIST_FETCH_REQUESTED,
-};
 
 const onEmployeeListFetchSuccess = (payload) => {
   return {
@@ -37,29 +33,23 @@ export const fetchEmployeeList = (params) => {
     startDate,
   } = params;
 
-  const pageParams = getPaginationValues(pagination);
-
-  return createMeteorCallAction({
-    callPath: 'users.callSummaryByCompany',
+  return createFetchAction({
     onFail: error => onEmployeeListFetchFailed({ error }),
-    onRequest: onEmployeeListFetchRequested,
-    onSuccess: (data) => {
-      if (!data.length) {
-        return onEmployeeListFetchSuccess({ data: [], total: 0 });
-      }
-
+    onRequest: EMPLOYEE_SUMMARY_LIST_FETCH_REQUESTED,
+    onSuccess: (response) => {
       const {
         results,
-        total,
-      } = data[0];
-      return onEmployeeListFetchSuccess({ data: results, total });
+        ...data
+      } = response;
+      return onEmployeeListFetchSuccess({ data: results, ...data });
     },
+    pagination,
     params: {
-      companyId,
       endDate,
+      fields: true,
       startDate,
-      ...pageParams,
     },
+    path: `company/${companyId}/user/summary`,
     shouldFetch: state => getEmployeeListThunk(state).shouldFetch(),
   });
 };

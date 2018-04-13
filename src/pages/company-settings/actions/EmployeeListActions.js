@@ -10,10 +10,6 @@ import {
   getEmployeeListThunk,
 } from '../reducers/EmployeeListReducer';
 
-const onEmployeeListFetchRequested = {
-  type: EMPLOYEE_LIST_FETCH_REQUESTED,
-};
-
 const onEmployeeListFetchSuccess = (payload) => {
   return {
     payload,
@@ -36,7 +32,7 @@ export const fetchEmployeeList = (params) => {
 
   return createFetchAction({
     onFail: error => onEmployeeListFetchFailed({ error }),
-    onRequest: onEmployeeListFetchRequested,
+    onRequest: EMPLOYEE_LIST_FETCH_REQUESTED,
     onSuccess: (response) => {
       const {
         results,

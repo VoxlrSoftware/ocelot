@@ -18,10 +18,21 @@ export const formatPhoneNumber = (phoneNumber) => {
     return '';
   }
 
-  const formattedNumber = phoneNumber.replace(/\D\d/g, '');
+  let number = phoneNumber;
+  let extension = '';
+
+  if (typeof phoneNumber === 'object') {
+    ({ number, extension } = phoneNumber);
+  }
+
+  if (extension) {
+    extension = `x${extension}`;
+  }
+
+  const formattedNumber = number.replace(/\D\d/g, '');
   const components = formattedNumber.match(/^(\d{3})(\d{3})(\d{4})$/);
 
-  return (!components) ? '' : `(${components[1]}) ${components[2]}-${components[3]}`;
+  return (!components) ? '' : `(${components[1]}) ${components[2]}-${components[3]}${extension}`;
 };
 
 export const getPhoneNumber = (state) => {

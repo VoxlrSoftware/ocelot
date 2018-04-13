@@ -65,7 +65,7 @@ const extractError = (response) => {
 };
 
 const getAction = (action) => {
-  if (typeof action === 'function') {
+  if (typeof action === 'function' || typeof action === 'object') {
     return action;
   }
 

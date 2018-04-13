@@ -47,7 +47,7 @@ const fetchFn = (props) => {
   const promises = [];
 
   if (employee) {
-    fetchCallList({ employeeId: employee.get('_id'), endDate, pagination, startDate });
+    fetchCallList({ employeeId: employee.get('id'), endDate, pagination, startDate });
   }
 
   return Promise.all(promises);

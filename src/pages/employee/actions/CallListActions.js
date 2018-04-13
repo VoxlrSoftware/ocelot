@@ -1,4 +1,4 @@
-import { createMeteorCallAction } from '../../../utils/redux/actions';
+import { createFetchAction } from '../../../utils/redux/actions';
 import { getPaginationValues } from '../../../utils/pagination';
 import {
   CALL_LIST_FETCH_FAILED,
@@ -11,10 +11,6 @@ import {
   getIsFetching,
   getIsStale,
 } from '../reducers/CallListReducer';
-
-const onCallListFetchRequested = {
-  type: CALL_LIST_FETCH_REQUESTED,
-};
 
 const onCallListFetchSuccess = (payload) => {
   return {
@@ -38,29 +34,23 @@ export const fetchCallList = (params) => {
     startDate,
   } = params;
 
-  const pageParams = getPaginationValues(pagination);
-
-  return createMeteorCallAction({
-    callPath: 'calls.callsByUser',
+  return createFetchAction({
     onFail: error => onCallListFetchFailed({ error }),
-    onRequest: onCallListFetchRequested,
-    onSuccess: (data) => {
-      if (!data.length) {
-        return onCallListFetchSuccess({ data: [], total: 0 });
-      }
-
+    onRequest: CALL_LIST_FETCH_REQUESTED,
+    onSuccess: (response) => {
       const {
         results,
-        total,
-      } = data[0];
-      return onCallListFetchSuccess({ data: results, total });
+        ...data
+      } = response;
+      return onCallListFetchSuccess({ data: results, ...data });
     },
+    pagination,
     params: {
-      employeeId,
       endDate,
+      fields: true,
       startDate,
-      ...pageParams,
     },
+    path: `user/${employeeId}/call`,
     shouldFetch: state => !getIsFetching(state) && getIsStale(state),
   });
 };

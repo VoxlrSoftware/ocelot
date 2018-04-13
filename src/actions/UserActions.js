@@ -2,6 +2,7 @@ import {
   createMeteorCallAction,
   createMutateAction,
   createMultipleActions,
+  createFetchAction,
 } from '../utils/redux/actions';
 import {
   USER_FETCH_FAILED,
@@ -37,8 +38,7 @@ const [
 ]);
 
 export const fetchUser = (userId) => {
-  return createMeteorCallAction({
-    callPath: 'users.findOne',
+  return createFetchAction({
     onFail: error => onUserFetchFailed({
       error,
     }),
@@ -50,9 +50,7 @@ export const fetchUser = (userId) => {
 
       return onUserFetchSuccess({ data, userId });
     },
-    params: {
-      userId,
-    },
+    path: `user/${userId}`,
     shouldFetch: state => getUserStateSelector(state, userId).shouldFetch(),
   });
 };

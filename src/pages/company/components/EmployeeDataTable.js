@@ -26,10 +26,10 @@ export default class Summary extends Component {
   buildColumns = () => {
     return [
       {
-        name: 'employeeName',
+        name: 'displayName',
         render: (entry) => {
-          const name = entry.get('employeeName');
-          const id = entry.get('_id');
+          const name = entry.get('displayName');
+          const id = entry.get('id');
           return <Link to={ `/employee/${id}` }>{ name }</Link>;
         },
         text: 'Employee',
@@ -40,9 +40,9 @@ export default class Summary extends Component {
         text: 'Total Calls',
       },
       {
-        name: 'totalRecordingDuration',
+        name: 'totalCallTime',
         render: (entry) => {
-          const value = entry.get('totalRecordingDuration');
+          const value = entry.get('totalCallTime');
           const decimal = formatTime(value);
           const title = formatTimeSeparated(value);
 
@@ -56,12 +56,12 @@ export default class Summary extends Component {
         text: 'Total Conversations',
       },
       {
-        name: 'scriptCompliance',
+        name: 'detectionRatio',
         render: (entry) => {
-          const value = entry.get('scriptCompliance');
+          const value = entry.get('detectionRatio');
           return `${(value * 100).toFixed(2)} %`;
         },
-        text: 'Call Strategy',
+        text: 'Detection Ratio',
       },
       {
         name: 'customerTalkRatio',
@@ -74,9 +74,13 @@ export default class Summary extends Component {
       {
         name: 'conversationRatio',
         render: (entry) => {
-          const value = entry.get('conversationRatio');
-          return `${(value * 100).toFixed(2)} %`;
+          const totalCalls = entry.get('totalCalls');
+          const totalConversations = entry.get('totalConversations');
+          const ratio = totalCalls > 0 ? (totalConversations / totalCalls) : 0;
+          
+          return `${(ratio * 100).toFixed(2)} %`;
         },
+        sortable: false,
         text: 'Conversation Ratio',
       },
     ];

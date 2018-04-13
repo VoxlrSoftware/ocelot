@@ -1,17 +1,18 @@
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { defaultMemoize } from 'reselect';
 import fetch from '../../../utils/redux/fetch';
 import Summary from '../../../components/summary/Summary';
 import {
-  fetchCallOutcome,
+  fetchCallOutcomes,
 } from '../actions/SummaryActions';
 
 import {
-  getCallOutcome,
+  getOutcomes,
 } from '../reducers/SummaryReducer';
 import { CALL_OUTCOMES } from '../../../Constants';
 
-const UNKNOWN = 'Unknown';
+const NONE = { text: 'None', value: 'None' };
 
 const callOutcomes = [
   CALL_OUTCOMES.WON,
@@ -19,6 +20,13 @@ const callOutcomes = [
   CALL_OUTCOMES.LOST,
   CALL_OUTCOMES.VOICEMAIL,
 ];
+
+const knownOutcomes = Immutable.Set.of(
+  CALL_OUTCOMES.WON.value,
+  CALL_OUTCOMES.LOST.value,
+  CALL_OUTCOMES.PROGRESS.value,
+  CALL_OUTCOMES.VOICEMAIL.value,
+);
 
 const getStatData = (outcome) => {
   return {
@@ -32,16 +40,22 @@ const getStatData = (outcome) => {
 const statistics = callOutcomes.map(getStatData);
 
 const getStatistics = defaultMemoize((outcomes) => {
+  const unknownKey = NONE.value;
   let stats = statistics.slice();
 
   if (outcomes) {
-    const outcomeMap = outcomes.reduce((acc, outcome) => {
-      acc[outcome.get('name')] = outcome.get('count');
+    const outcomeMap = outcomes.reduce((acc, count, name) => {
+      if (knownOutcomes.contains(name)) {
+        acc[name] = count;
+      } else {
+        acc[unknownKey] = (acc[unknownKey] || 0) + count;
+      }
+
       return acc;
     }, {});
 
-    if (outcomeMap[UNKNOWN]) {
-      stats.push(getStatData(UNKNOWN));
+    if (outcomeMap[unknownKey]) {
+      stats.push(getStatData(NONE));
     }
 
     stats = stats.map((outcome) => {
@@ -57,7 +71,7 @@ const getStatistics = defaultMemoize((outcomes) => {
 });
 
 const mapStateToProps = (state) => {
-  const callOutcome = getCallOutcome(state);
+  const callOutcome = getOutcomes(state);
   const statistics = getStatistics(callOutcome.data);
 
   return {
@@ -68,22 +82,22 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  fetchCallOutcome,
+  fetchCallOutcomes,
 };
 
 const fetchFn = (props) => {
   const {
     employee,
     endDate,
-    fetchCallOutcome,
+    fetchCallOutcomes,
     startDate,
   } = props;
 
 
-  const employeeId = employee.get('_id');
+  const employeeId = employee.get('id');
 
   const promises = [
-    fetchCallOutcome({ employeeId, endDate, startDate }),
+    fetchCallOutcomes({ employeeId, endDate, startDate }),
   ];
 
   return Promise.all(promises);

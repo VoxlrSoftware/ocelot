@@ -1,178 +1,114 @@
 import {
-  createMeteorCallAction,
+  createFetchAction,
   createMultipleActions,
 } from '../../../utils/redux/actions';
 import {
-  EMPLOYEE_SUMMARY_CHART_FETCH_REQUESTED,
-  EMPLOYEE_SUMMARY_CHART_FETCH_FAILED,
-  EMPLOYEE_SUMMARY_CHART_FETCH_SUCCESS,
-  EMPLOYEE_SUMMARY_FETCH_FAILED,
-  EMPLOYEE_SUMMARY_FETCH_REQUESTED,
-  EMPLOYEE_SUMMARY_FETCH_SUCCESS,
+  EMPLOYEE_SUMMARY_AVERAGES_REQUESTED,
+  EMPLOYEE_SUMMARY_AVERAGES_RECEIVED,
+  EMPLOYEE_SUMMARY_AVERAGES_FAILED,
+  EMPLOYEE_SUMMARY_OUTCOMES_RECEIVED,
+  EMPLOYEE_SUMMARY_OUTCOMES_REQUESTED,
+  EMPLOYEE_SUMMARY_OUTCOMES_FAILED,
+  EMPLOYEE_SUMMARY_ROLLUPS_REQUESTED,
+  EMPLOYEE_SUMMARY_ROLLUPS_RECEIVED,
+  EMPLOYEE_SUMMARY_ROLLUPS_FAILED,
 } from '../../../actionTypes';
 import {
-  CALL_OUTCOME_SUMMARY,
-  CALL_STRATEGY_SUMMARY,
-  CONVERSATION_RATIO_SUMMARY,
-  CUSTOMER_TALK_RATIO_SUMMARY,
-} from '../../../Constants';
-import {
-  getCallOutcome,
-  getCallStrategy,
-  getCallStrategyChart,
-  getConversationRatio,
-  getConversationRatioChart,
-  getTalkRatio,
-  getTalkRatioChart,
+  getAverages,
+  getRollups,
+  getOutcomes,
 } from '../reducers/SummaryReducer';
 
 const [
-  onSummaryFetchRequested,
-  onSummaryFetchFailed,
-  onSummaryFetchSuccess,
+  onAveragesFetchFailed,
+  onAveragesFetchSuccess,
 ] = createMultipleActions([
-  EMPLOYEE_SUMMARY_FETCH_REQUESTED,
-  EMPLOYEE_SUMMARY_FETCH_FAILED,
-  EMPLOYEE_SUMMARY_FETCH_SUCCESS,
+  EMPLOYEE_SUMMARY_AVERAGES_FAILED,
+  EMPLOYEE_SUMMARY_AVERAGES_RECEIVED,
 ]);
-
-const fetchSummary = (params) => {
-  const {
-    callPath,
-    employeeId,
-    endDate,
-    shouldFetch,
-    startDate,
-    summaryType,
-  } = params;
-
-  return createMeteorCallAction({
-    callPath,
-    onFail: error => onSummaryFetchFailed({
-      error,
-      summaryType,
-    }),
-    onRequest: onSummaryFetchRequested({
-      summaryType,
-    }),
-    onSuccess: (data) => {
-      return onSummaryFetchSuccess({
-        data: data.length ? data[0].results : 0,
-        summaryType,
-      });
-    },
-    params: {
-      employeeId,
-      endDate,
-      startDate,
-    },
-    shouldFetch,
-  });
-};
-
-export const fetchCallStrategy = (params) => {
-  return fetchSummary({
-    callPath: 'calls.scriptComplianceByEmployee',
-    shouldFetch: state => getCallStrategy(state).shouldFetch(),
-    summaryType: CALL_STRATEGY_SUMMARY,
-    ...params,
-  });
-};
-
-export const fetchCustomerTalkRatio = (params) => {
-  return fetchSummary({
-    callPath: 'calls.customerTalkRatioByEmployee',
-    shouldFetch: state => getTalkRatio(state).shouldFetch(),
-    summaryType: CUSTOMER_TALK_RATIO_SUMMARY,
-    ...params,
-  });
-};
-
-export const fetchConversationRatio = (params) => {
-  return fetchSummary({
-    callPath: 'calls.conversationRatioByEmployee',
-    shouldFetch: state => getConversationRatio(state).shouldFetch(),
-    summaryType: CONVERSATION_RATIO_SUMMARY,
-    ...params,
-  });
-};
-
-export const fetchCallOutcome = (params) => {
-  return fetchSummary({
-    callPath: 'calls.callOutcomeByEmployee',
-    shouldFetch: state => getCallOutcome(state).shouldFetch(),
-    summaryType: CALL_OUTCOME_SUMMARY,
-    ...params,
-  });
-};
 
 const [
-  onSummaryChartFetchRequested,
-  onSummaryChartFetchFailed,
-  onSummaryChartFetchSuccess,
+  onOutcomesFetchFailed,
+  onOutcomesFetchSuccess,
 ] = createMultipleActions([
-  EMPLOYEE_SUMMARY_CHART_FETCH_REQUESTED,
-  EMPLOYEE_SUMMARY_CHART_FETCH_FAILED,
-  EMPLOYEE_SUMMARY_CHART_FETCH_SUCCESS,
+  EMPLOYEE_SUMMARY_OUTCOMES_FAILED,
+  EMPLOYEE_SUMMARY_OUTCOMES_RECEIVED,
 ]);
 
-const fetchSummaryChart = (params) => {
+const [
+  onRollupsFetchFailed,
+  onRollupsFetchSuccess,
+] = createMultipleActions([
+  EMPLOYEE_SUMMARY_ROLLUPS_FAILED,
+  EMPLOYEE_SUMMARY_ROLLUPS_RECEIVED,
+]);
+
+export const fetchAverages = (params) => {
   const {
-    callPath,
     employeeId,
     endDate,
-    shouldFetch,
+    fields,
     startDate,
-    summaryType,
   } = params;
 
-  return createMeteorCallAction({
-    callPath,
-    onFail: error => onSummaryChartFetchFailed({
+  return createFetchAction({
+    onFail: error => onAveragesFetchFailed({
       error,
-      summaryType,
     }),
-    onRequest: onSummaryChartFetchRequested({
-      summaryType,
-    }),
-    onSuccess: (data) => {
-      return onSummaryChartFetchSuccess({
-        data,
-        summaryType,
-      });
-    },
+    onRequest: EMPLOYEE_SUMMARY_AVERAGES_REQUESTED,
+    onSuccess: data => onAveragesFetchSuccess({ data }),
     params: {
-      employeeId,
+      endDate,
+      fields,
+      startDate,
+    },
+    path: `user/${employeeId}/call/average`,
+    shouldFetch: state => getAverages(state).shouldFetch(),
+  });
+};
+
+export const fetchRollups = (params) => {
+  const {
+    employeeId,
+    endDate,
+    fields,
+    startDate,
+  } = params;
+
+  return createFetchAction({
+    onFail: error => onRollupsFetchFailed({
+      error,
+    }),
+    onRequest: EMPLOYEE_SUMMARY_ROLLUPS_REQUESTED,
+    onSuccess: data => onRollupsFetchSuccess({ data }),
+    params: {
+      endDate,
+      fields,
+      startDate,
+    },
+    path: `user/${employeeId}/call/rollup`,
+    shouldFetch: state => getRollups(state).shouldFetch(),
+  });
+};
+
+export const fetchCallOutcomes = (params) => {
+  const {
+    employeeId,
+    endDate,
+    startDate,
+  } = params;
+
+  return createFetchAction({
+    onFail: error => onOutcomesFetchFailed({
+      error,
+    }),
+    onRequest: EMPLOYEE_SUMMARY_OUTCOMES_REQUESTED,
+    onSuccess: data => onOutcomesFetchSuccess({ data }),
+    params: {
       endDate,
       startDate,
     },
-    shouldFetch,
-  });
-};
-
-export const fetchCallStrategyChart = (params) => {
-  return fetchSummaryChart({
-    callPath: 'calls.agg.scriptComplianceByEmployee',
-    shouldFetch: state => getCallStrategyChart(state).shouldFetch(),
-    summaryType: `${CALL_STRATEGY_SUMMARY}Chart`,
-    ...params,
-  });
-};
-
-export const fetchCustomerTalkRatioChart = (params) => {
-  return fetchSummaryChart({
-    callPath: 'calls.agg.customerTalkRatioByEmployee',
-    shouldFetch: state => getTalkRatioChart(state).shouldFetch(),
-    summaryType: `${CUSTOMER_TALK_RATIO_SUMMARY}Chart`,
-    ...params,
-  });
-};
-
-export const fetchConversationRatioChart = (params) => {
-  return fetchSummaryChart({
-    callPath: 'calls.agg.conversationRatioByEmployee',
-    shouldFetch: state => getConversationRatioChart(state).shouldFetch(),
-    summaryType: `${CONVERSATION_RATIO_SUMMARY}Chart`,
-    ...params,
+    path: `user/${employeeId}/call/outcomes`,
+    shouldFetch: state => getOutcomes(state).shouldFetch(),
   });
 };
